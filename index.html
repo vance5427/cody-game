@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>CODY 🐕🚀 — Space Dog Adventures</title>
+<style>
+  :root {
+    --navy: #050a1a;
+    --deep-navy: #020610;
+    --blue: #1a3a6e;
+    --electric: #00bfff;
+    --gold: #ffd700;
+    --white: #f0f4ff;
+    --dim: #8899cc;
+    --red: #ff4466;
+    --green: #00ff88;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--deep-navy);
+    color: var(--white);
+    font-family: 'Courier New', Courier, monospace;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+  }
+
+  /* ===== STARS ===== */
+  #starfield {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle linear infinite;
+  }
+
+  @keyframes twinkle {
+    0%   { opacity: 0.2; transform: scale(1); }
+    50%  { opacity: 1;   transform: scale(1.4); }
+    100% { opacity: 0.2; transform: scale(1); }
+  }
+
+  @keyframes drift {
+    from { transform: translateY(-10px); }
+    to   { transform: translateY(110vh); }
+  }
+
+  /* ===== SCREENS ===== */
+  .screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: opacity 0.6s ease;
+    overflow: hidden;
+  }
+
+  .screen.hidden { opacity: 0; pointer-events: none; }
+
+  /* ===== LANDING ===== */
+  #landing {
+    background: radial-gradient(ellipse at center, #0a1535 0%, var(--deep-navy) 70%);
+    text-align: center;
+    padding: 20px;
+  }
+
+  .cody-hero {
+    font-size: clamp(80px, 18vw, 140px);
+    line-height: 1;
+    animation: float 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 30px rgba(0,191,255,0.5));
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-18px); }
+  }
+
+  .title {
+    font-size: clamp(42px, 10vw, 80px);
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    text-shadow:
+      0 0 20px rgba(255,215,0,0.7),
+      0 0 60px rgba(255,215,0,0.3);
+    margin: 10px 0;
+    font-family: 'Courier New', monospace;
+  }
+
+  .subtitle {
+    font-size: clamp(14px, 3vw, 20px);
+    color: var(--electric);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .stardate {
+    font-size: 13px;
+    color: var(--dim);
+    margin-bottom: 40px;
+    letter-spacing: 0.15em;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 14px 36px;
+    border: 2px solid var(--electric);
+    color: var(--electric);
+    font-family: 'Courier New', monospace;
+    font-size: clamp(14px, 3vw, 18px);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    background: rgba(0,191,255,0.08);
+    transition: all 0.2s;
+    text-decoration: none;
+    border-radius: 4px;
+    margin: 8px;
+  }
+
+  .btn:hover, .btn:active {
+    background: rgba(0,191,255,0.25);
+    box-shadow: 0 0 20px rgba(0,191,255,0.4);
+    transform: scale(1.04);
+  }
+
+  .btn-gold {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(255,215,0,0.08);
+  }
+
+  .btn-gold:hover, .btn-gold:active {
+    background: rgba(255,215,0,0.2);
+    box-shadow: 0 0 20px rgba(255,215,0,0.4);
+  }
+
+  .nav-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  /* ===== CRAWL ===== */
+  #crawl-screen {
+    background: black;
+    perspective: 300px;
+    overflow: hidden;
+  }
+
+  .crawl-wrapper {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    padding: 0 15%;
+    transform-origin: bottom center;
+    transform: rotateX(20deg);
+    animation: crawl 28s linear forwards;
+  }
+
+  @keyframes crawl {
+    0%   { bottom: -100%; }
+    100% { bottom: 200%; }
+  }
+
+  .crawl-title {
+    text-align: center;
+    color: var(--gold);
+    font-size: clamp(24px, 5vw, 40px);
+    letter-spacing: 0.2em;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+  }
+
+  .crawl-subtitle {
+    text-align: center;
+    color: var(--electric);
+    font-size: clamp(14px, 3vw, 22px);
+    letter-spacing: 0.15em;
+    margin-bottom: 40px;
+  }
+
+  .crawl-text {
+    color: #ffd700cc;
+    font-size: clamp(14px, 2.5vw, 20px);
+    line-height: 1.8;
+    text-align: justify;
+    margin-bottom: 24px;
+  }
+
+  .crawl-skip {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 20;
+    font-size: 13px;
+  }
+
+  /* ===== GAME ===== */
+  #game-screen {
+    background: black;
+    flex-direction: column;
+    padding: 0;
+  }
+
+  #gameCanvas {
+    display: block;
+    touch-action: none;
+  }
+
+  #hud {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 16px;
+    font-size: clamp(13px, 2.5vw, 18px);
+    letter-spacing: 0.12em;
+    pointer-events: none;
+    z-index: 20;
+  }
+
+  #hud span { color: var(--electric); }
+  #hud .lives { color: var(--gold); }
+
+  #game-over-overlay, #game-win-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 30;
+    text-align: center;
+    padding: 20px;
+  }
+
+  #game-over-overlay h2, #game-win-overlay h2 {
+    font-size: clamp(28px, 7vw, 52px);
+    color: var(--red);
+    margin-bottom: 16px;
+    letter-spacing: 0.15em;
+  }
+
+  #game-win-overlay h2 { color: var(--gold); }
+
+  #game-over-overlay p, #game-win-overlay p {
+    font-size: clamp(13px, 2.5vw, 18px);
+    color: var(--dim);
+    margin-bottom: 24px;
+    max-width: 400px;
+    line-height: 1.6;
+  }
+
+  .hidden { display: none !important; }
+
+  #mobile-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 20;
+  }
+
+  .mobile-btn {
+    width: 72px;
+    height: 72px;
+    border: 2px solid var(--electric);
+    border-radius: 50%;
+    background: rgba(0,191,255,0.12);
+    color: var(--electric);
+    font-size: 28px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.1s;
+  }
+
+  .mobile-btn:active { background: rgba(0,191,255,0.35); }
+
+  /* ===== CAPTAIN'S LOG ===== */
+  #log-screen {
+    background: radial-gradient(ellipse at top, #0a1535 0%, var(--deep-navy) 80%);
+    padding: 20px;
+    overflow-y: auto;
+    justify-content: flex-start;
+    padding-top: 60px;
+    padding-bottom: 40px;
+  }
+
+  .log-header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  .log-header h1 {
+    font-size: clamp(22px, 5vw, 36px);
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    text-shadow: 0 0 20px rgba(255,215,0,0.5);
+  }
+
+  .log-header p {
+    color: var(--electric);
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    margin-top: 6px;
+  }
+
+  .log-entry {
+    background: rgba(0,191,255,0.05);
+    border: 1px solid rgba(0,191,255,0.2);
+    border-left: 4px solid var(--electric);
+    border-radius: 6px;
+    padding: 20px 22px;
+    margin-bottom: 20px;
+    max-width: 680px;
+    width: 100%;
+  }
+
+  .log-entry .log-date {
+    font-size: 12px;
+    color: var(--electric);
+    letter-spacing: 0.2em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .log-entry .log-title {
+    font-size: clamp(16px, 3vw, 20px);
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  .log-entry p {
+    font-size: clamp(13px, 2vw, 16px);
+    color: #ccd9ff;
+    line-height: 1.7;
+  }
+
+  .log-entry .log-sig {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--dim);
+    font-style: italic;
+  }
+
+  .log-back {
+    margin-top: 28px;
+    text-align: center;
+  }
+
+  /* ===== SCANLINE OVERLAY ===== */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.05) 2px,
+      rgba(0,0,0,0.05) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== STARFIELD ===== -->
+<div id="starfield"></div>
+
+<!-- ===== LANDING ===== -->
+<div class="screen" id="landing">
+  <div class="cody-hero">🐕🚀</div>
+  <div class="title">CODY</div>
+  <div class="subtitle">Space Dog of the Final Frontier</div>
+  <div class="stardate">STARDATE 2387.42 · USS BISCUIT NCC-1701-W</div>
+  <div class="nav-row">
+    <button class="btn btn-gold" onclick="showCrawl()">▶ BEGIN MISSION</button>
+  </div>
+  <div class="nav-row">
+    <button class="btn" onclick="showGame()">🎮 ASTEROID DODGE</button>
+    <button class="btn" onclick="showLog()">📖 CAPTAIN'S LOG</button>
+  </div>
+</div>
+
+<!-- ===== STAR WARS CRAWL ===== -->
+<div class="screen hidden" id="crawl-screen">
+  <div class="crawl-wrapper" id="crawl-content">
+    <div class="crawl-title">CODY</div>
+    <div class="crawl-subtitle">A Space Dog Adventure</div>
+
+    <p class="crawl-text">
+      A long time ago, in a galaxy that smelled suspiciously of kibble and squeaky toys...
+    </p>
+
+    <p class="crawl-text">
+      STARDATE 2387.42. The Galactic Bone Republic is under threat. An evil fleet of SPACE CATS
+      — led by the dastardly Darth Whiskers — has stolen the legendary GOLDEN BISCUIT,
+      an ancient artifact said to grant unlimited belly rubs to whoever possesses it.
+    </p>
+
+    <p class="crawl-text">
+      Only one hero can save the galaxy. His name is CODY.
+      A good boy. A very good boy.
+    </p>
+
+    <p class="crawl-text">
+      Aboard the starship USS BISCUIT — the finest vessel in Starfleet's K-9 Corps —
+      Commander Cody has set a course for the Orion Kibble Belt, armed with nothing
+      but a tennis ball launcher, an unwavering nose, and a heart full of wags.
+    </p>
+
+    <p class="crawl-text">
+      His mission: to boldly fetch where no dog has fetched before.
+    </p>
+
+    <p class="crawl-text" style="text-align:center; color: var(--gold); font-size: 1.3em; letter-spacing: 0.2em;">
+      🐕 &nbsp; 🚀 &nbsp; 🌟
+    </p>
+  </div>
+  <button class="btn crawl-skip" onclick="showGame()">SKIP → PLAY</button>
+</div>
+
+<!-- ===== GAME ===== -->
+<div class="screen hidden" id="game-screen">
+  <div id="hud">
+    <span>SCORE: <b id="score-display">0</b></span>
+    <span style="color:var(--gold)">🐕 USS BISCUIT</span>
+    <span class="lives">LIVES: <b id="lives-display">3</b></span>
+  </div>
+  <canvas id="gameCanvas"></canvas>
+
+  <!-- Mobile controls -->
+  <div id="mobile-controls">
+    <div class="mobile-btn" id="btn-left">◀</div>
+    <div class="mobile-btn" id="btn-right">▶</div>
+  </div>
+
+  <!-- Game Over -->
+  <div id="game-over-overlay" class="hidden">
+    <h2>💀 WARP CORE BREACH</h2>
+    <p>Cody's ship has been destroyed. Starfleet Command is very disappointed.<br>
+    But Cody is wagging his tail anyway — he had a great time.</p>
+    <p style="color:var(--gold); font-size:1.2em;">FINAL SCORE: <b id="final-score">0</b></p>
+    <button class="btn btn-gold" onclick="restartGame()">🔄 RE-LAUNCH MISSION</button>
+    <button class="btn" onclick="showLanding()" style="margin-top:8px">← BACK TO BASE</button>
+  </div>
+
+  <!-- Win Screen -->
+  <div id="game-win-overlay" class="hidden">
+    <h2>🏆 MISSION COMPLETE!</h2>
+    <p>Cody defeated Darth Whiskers! The Golden Biscuit is safe.<br>
+    The galaxy is saved. Treats for everyone.</p>
+    <p style="color:var(--gold); font-size:1.2em;">SCORE: <b id="win-score">0</b></p>
+    <button class="btn btn-gold" onclick="restartGame()">🚀 PLAY AGAIN</button>
+    <button class="btn" onclick="showLanding()" style="margin-top:8px">← BACK TO BASE</button>
+  </div>
+</div>
+
+<!-- ===== CAPTAIN'S LOG ===== -->
+<div class="screen hidden" id="log-screen">
+  <div class="log-header">
+    <div style="font-size:48px; margin-bottom:8px">📖🐕</div>
+    <h1>CAPTAIN'S LOG</h1>
+    <p>USS BISCUIT · K-9 CORPS STARFLEET · CLASSIFIED: VERY GOOD BOY LEVEL</p>
+  </div>
+
+  <div class="log-entry">
+    <div class="log-date">Stardate 2387.01 — Entry #001</div>
+    <div class="log-title">🐾 First Contact with the Mailman Nebula</div>
+    <p>We've made it past the Mailman Nebula without incident. Cody detected the nebula from
+    approximately 47 parsecs out — well before sensors registered anything. I have no scientific
+    explanation for this. Chief Science Officer Spock says it may be related to Cody's
+    "extraordinary olfactory processing." I say it's because Cody hates mailmen on a molecular level.
+    Either way, we've marked the nebula on the charts as a zone of extreme barking.</p>
+    <div class="log-sig">— Capt. Bob, Commanding Officer, USS Biscuit</div>
+  </div>
+
+  <div class="log-entry">
+    <div class="log-date">Stardate 2387.14 — Entry #002</div>
+    <div class="log-title">🦴 The Bone Heist of Sector Seven</div>
+    <p>The Space Cats have stolen our emergency bone reserves again. Cody tracked them to a
+    rogue asteroid and single-handedly retrieved 14 bones, 3 squeaky toys, and what appears to
+    be an alien tennis ball of unknown origin. When asked how he located the stash, Cody
+    licked my face and wagged his tail. I'm writing this down as "advanced tactical instinct."
+    Starfleet will never know the difference. Also Cody is now wearing the alien tennis ball
+    as a hat and refusing to take it off. It suits him.</p>
+    <div class="log-sig">— Capt. Bob</div>
+  </div>
+
+  <div class="log-entry">
+    <div class="log-date">Stardate 2387.28 — Entry #003</div>
+    <div class="log-title">🌌 Warp Speed Incident — The Squirrel Anomaly</div>
+    <p>Cody engaged the warp drive unprompted today. When I asked what caused the spontaneous
+    jump to warp 9.7, the ship's AI informed me that long-range sensors had detected a
+    "small, fast, furry object" in the Rigel system. This is the third time this month.
+    Engineering has requested we install a "squirrel dampener" on the warp controls.
+    Cody is unrepentant. He found the squirrel, he says. He always finds the squirrel.
+    The squirrel escaped into a nebula. Cody has staked out the nebula exit for six hours.
+    We are all waiting. Even Darth Whiskers seems curious.</p>
+    <div class="log-sig">— Capt. Bob, currently eating a sandwich in the command chair</div>
+  </div>
+
+  <div class="log-entry">
+    <div class="log-date">Stardate 2387.42 — Entry #004</div>
+    <div class="log-title">🚀 Cody Saves the Galaxy (Again, Somehow)</div>
+    <p>I must report that Commander Cody has once again saved this vessel, this crew, and
+    arguably the entire known universe. Darth Whiskers had us cornered near the Black Hole of
+    No Return (officially called HR-6819 but nobody uses that). The Space Cat fleet was
+    closing in. Ammunition depleted. Shields at 12%. And then Cody picked up his tennis ball
+    launcher, pressed his big fluffy face against the viewport, and barked so loudly at
+    Darth Whiskers that the entire enemy fleet broke formation in a panic. Scientists are
+    calling it a "sonic anomaly." I'm calling it a good boy being a very good boy.
+    Commendation filed. Extra treats allocated. Gold star on the fridge.</p>
+    <div class="log-sig">— Capt. Bob, filing this from the couch with Cody asleep on my feet</div>
+  </div>
+
+  <div class="log-back">
+    <button class="btn btn-gold" onclick="showLanding()">← RETURN TO BRIDGE</button>
+  </div>
+</div>
+
+<script>
+// ===== STARFIELD =====
+(function() {
+  const sf = document.getElementById('starfield');
+  const count = 180;
+  for (let i = 0; i < count; i++) {
+    const s = document.createElement('div');
+    s.classList.add('star');
+    const size = Math.random() * 2.5 + 0.5;
+    s.style.width  = size + 'px';
+    s.style.height = size + 'px';
+    s.style.left   = Math.random() * 100 + '%';
+    s.style.top    = Math.random() * 100 + '%';
+    const dur = 2 + Math.random() * 4;
+    s.style.animation = `twinkle ${dur}s ${Math.random() * dur}s linear infinite`;
+    sf.appendChild(s);
+  }
+})();
+
+// ===== NAVIGATION =====
+let crawlTimer = null;
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+
+function showLanding() {
+  if (crawlTimer) { clearTimeout(crawlTimer); crawlTimer = null; }
+  stopGame();
+  showScreen('landing');
+}
+
+function showCrawl() {
+  showScreen('crawl-screen');
+  // Reset animation
+  const cw = document.getElementById('crawl-content');
+  cw.style.animation = 'none';
+  cw.offsetHeight; // reflow
+  cw.style.animation = 'crawl 28s linear forwards';
+  crawlTimer = setTimeout(() => showGame(), 28000);
+}
+
+function showGame() {
+  if (crawlTimer) { clearTimeout(crawlTimer); crawlTimer = null; }
+  showScreen('game-screen');
+  initGame();
+}
+
+function showLog() {
+  if (crawlTimer) { clearTimeout(crawlTimer); crawlTimer = null; }
+  stopGame();
+  showScreen('log-screen');
+  document.getElementById('log-screen').scrollTop = 0;
+}
+
+// ===== GAME =====
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+let gameState = null;
+let animFrame = null;
+
+const SHIP_SIZE = 44;
+const SHIP_SPEED = 5;
+const ASTEROID_BASE_SPEED = 2.2;
+const BONE_SPEED = 2;
+const WIN_SCORE = 500;
+
+function resizeCanvas() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+function initGame() {
+  resizeCanvas();
+  document.getElementById('game-over-overlay').classList.add('hidden');
+  document.getElementById('game-win-overlay').classList.add('hidden');
+
+  const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ||
+                   window.innerWidth < 700;
+  document.getElementById('mobile-controls').style.display = isMobile ? 'flex' : 'none';
+
+  gameState = {
+    score: 0,
+    lives: 3,
+    running: true,
+    ship: {
+      x: canvas.width / 2,
+      y: canvas.height - 90,
+      vx: 0,
+      invincible: 0
+    },
+    asteroids: [],
+    bones: [],
+    particles: [],
+    keys: { left: false, right: false },
+    spawnTimer: 0,
+    boneTimer: 0,
+    level: 1,
+    frameCount: 0
+  };
+
+  updateHUD();
+
+  if (animFrame) cancelAnimationFrame(animFrame);
+  gameLoop();
+}
+
+function stopGame() {
+  if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null; }
+  if (gameState) gameState.running = false;
+}
+
+function restartGame() {
+  initGame();
+}
+
+function updateHUD() {
+  document.getElementById('score-display').textContent = gameState.score;
+  document.getElementById('lives-display').textContent = '♥'.repeat(gameState.lives);
+}
+
+// Input
+window.addEventListener('keydown', e => {
+  if (!gameState || !gameState.running) return;
+  if (e.key === 'ArrowLeft'  || e.key === 'a') gameState.keys.left  = true;
+  if (e.key === 'ArrowRight' || e.key === 'd') gameState.keys.right = true;
+});
+window.addEventListener('keyup', e => {
+  if (!gameState) return;
+  if (e.key === 'ArrowLeft'  || e.key === 'a') gameState.keys.left  = false;
+  if (e.key === 'ArrowRight' || e.key === 'd') gameState.keys.right = false;
+});
+
+// Mobile buttons
+const btnL = document.getElementById('btn-left');
+const btnR = document.getElementById('btn-right');
+
+['touchstart','mousedown'].forEach(ev => {
+  btnL.addEventListener(ev, e => { e.preventDefault(); if (gameState) gameState.keys.left  = true; });
+  btnR.addEventListener(ev, e => { e.preventDefault(); if (gameState) gameState.keys.right = true; });
+});
+['touchend','mouseup','touchcancel'].forEach(ev => {
+  btnL.addEventListener(ev, e => { e.preventDefault(); if (gameState) gameState.keys.left  = false; });
+  btnR.addEventListener(ev, e => { e.preventDefault(); if (gameState) gameState.keys.right = false; });
+});
+
+// Touch swipe
+let touchX = null;
+canvas.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, {passive:true});
+canvas.addEventListener('touchmove', e => {
+  if (!gameState || !gameState.running || touchX === null) return;
+  const dx = e.touches[0].clientX - touchX;
+  if (Math.abs(dx) > 10) {
+    gameState.keys.left  = dx < 0;
+    gameState.keys.right = dx > 0;
+  }
+}, {passive:true});
+canvas.addEventListener('touchend', () => {
+  if (gameState) { gameState.keys.left = false; gameState.keys.right = false; }
+  touchX = null;
+}, {passive:true});
+
+window.addEventListener('resize', () => {
+  if (gameState && gameState.running) resizeCanvas();
+});
+
+function spawnAsteroid() {
+  const g = gameState;
+  const x = Math.random() * (canvas.width - 40) + 20;
+  const radius = 18 + Math.random() * 20;
+  const speed = ASTEROID_BASE_SPEED + (g.level - 1) * 0.4 + Math.random() * 1.2;
+  g.asteroids.push({ x, y: -radius, r: radius, speed, rot: 0, rotSpeed: (Math.random()-0.5)*0.05, sides: Math.floor(Math.random()*3)+5 });
+}
+
+function spawnBone() {
+  const x = Math.random() * (canvas.width - 40) + 20;
+  gameState.bones.push({ x, y: -18, speed: BONE_SPEED + Math.random() * 0.8, bob: Math.random() * Math.PI * 2 });
+}
+
+function addParticles(x, y, color, count) {
+  for (let i = 0; i < count; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 1.5 + Math.random() * 3.5;
+    gameState.particles.push({
+      x, y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      life: 1.0,
+      decay: 0.03 + Math.random() * 0.04,
+      r: 2 + Math.random() * 3,
+      color
+    });
+  }
+}
+
+function drawShip(x, y, invincible) {
+  if (invincible > 0 && Math.floor(invincible / 6) % 2 === 0) return;
+  ctx.save();
+  ctx.translate(x, y);
+  // Thruster glow
+  ctx.beginPath();
+  ctx.fillStyle = `rgba(0,191,255,${0.4 + Math.sin(Date.now()/80)*0.3})`;
+  ctx.ellipse(0, SHIP_SIZE/2 + 6, 8, 10 + Math.random()*4, 0, 0, Math.PI*2);
+  ctx.fill();
+  // Ship body
+  ctx.beginPath();
+  ctx.moveTo(0, -SHIP_SIZE/2);
+  ctx.lineTo(SHIP_SIZE/2, SHIP_SIZE/2);
+  ctx.lineTo(SHIP_SIZE/4, SHIP_SIZE/3);
+  ctx.lineTo(-SHIP_SIZE/4, SHIP_SIZE/3);
+  ctx.lineTo(-SHIP_SIZE/2, SHIP_SIZE/2);
+  ctx.closePath();
+  const grad = ctx.createLinearGradient(0, -SHIP_SIZE/2, 0, SHIP_SIZE/2);
+  grad.addColorStop(0, '#ffd700');
+  grad.addColorStop(1, '#1a3a6e');
+  ctx.fillStyle = grad;
+  ctx.fill();
+  ctx.strokeStyle = '#00bfff';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  // Cockpit window
+  ctx.beginPath();
+  ctx.arc(0, 0, 9, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(0,191,255,0.6)';
+  ctx.fill();
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  // Dog face in cockpit
+  ctx.font = '11px serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('🐕', 0, 0);
+  ctx.restore();
+}
+
+function drawAsteroid(a) {
+  ctx.save();
+  ctx.translate(a.x, a.y);
+  ctx.rotate(a.rot);
+  ctx.beginPath();
+  for (let i = 0; i < a.sides; i++) {
+    const angle = (i / a.sides) * Math.PI * 2;
+    const jitter = a.r * (0.75 + Math.sin(i * 7.3) * 0.25);
+    const px = Math.cos(angle) * jitter;
+    const py = Math.sin(angle) * jitter;
+    i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+  }
+  ctx.closePath();
+  ctx.fillStyle = '#3a2c1a';
+  ctx.fill();
+  ctx.strokeStyle = '#888866';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawBone(b, frame) {
+  ctx.save();
+  ctx.translate(b.x, b.y + Math.sin(b.bob + frame * 0.06) * 4);
+  ctx.font = `${SHIP_SIZE * 0.7}px serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('🦴', 0, 0);
+  // Glow
+  ctx.shadowColor = '#ffd700';
+  ctx.shadowBlur = 12;
+  ctx.fillText('🦴', 0, 0);
+  ctx.restore();
+}
+
+function drawParticles() {
+  for (const p of gameState.particles) {
+    ctx.globalAlpha = p.life;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r * p.life, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawBackground() {
+  ctx.fillStyle = '#020610';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+function gameLoop() {
+  if (!gameState || !gameState.running) return;
+  const g = gameState;
+  g.frameCount++;
+
+  drawBackground();
+
+  // Move ship
+  if (g.keys.left)  g.ship.vx -= 0.8;
+  if (g.keys.right) g.ship.vx += 0.8;
+  g.ship.vx *= 0.88;
+  g.ship.x += g.ship.vx;
+  g.ship.x = Math.max(SHIP_SIZE/2, Math.min(canvas.width - SHIP_SIZE/2, g.ship.x));
+
+  if (g.invincible > 0) g.invincible--;
+  if (g.ship.invincible > 0) g.ship.invincible--;
+
+  // Spawn
+  g.spawnTimer++;
+  g.boneTimer++;
+  const spawnRate = Math.max(28, 60 - g.level * 4);
+  if (g.spawnTimer >= spawnRate) { spawnAsteroid(); g.spawnTimer = 0; }
+  const boneRate = 140 + Math.random() * 80;
+  if (g.boneTimer >= boneRate) { spawnBone(); g.boneTimer = 0; }
+
+  // Level up
+  if (g.score > 0 && g.score % 100 === 0) g.level = Math.min(8, 1 + Math.floor(g.score / 100));
+
+  // Asteroids
+  for (let i = g.asteroids.length - 1; i >= 0; i--) {
+    const a = g.asteroids[i];
+    a.y += a.speed;
+    a.rot += a.rotSpeed;
+    if (a.y > canvas.height + a.r) { g.asteroids.splice(i, 1); continue; }
+    // Draw
+    drawAsteroid(a);
+    // Collision
+    if (g.ship.invincible <= 0) {
+      const dist = Math.hypot(a.x - g.ship.x, a.y - g.ship.y);
+      if (dist < a.r + SHIP_SIZE * 0.35) {
+        addParticles(a.x, a.y, '#ff6644', 14);
+        addParticles(g.ship.x, g.ship.y, '#ffd700', 10);
+        g.asteroids.splice(i, 1);
+        g.lives--;
+        g.ship.invincible = 90;
+        updateHUD();
+        if (g.lives <= 0) {
+          gameOver();
+          return;
+        }
+      }
+    }
+  }
+
+  // Bones
+  for (let i = g.bones.length - 1; i >= 0; i--) {
+    const b = g.bones[i];
+    b.y += b.speed;
+    if (b.y > canvas.height + 20) { g.bones.splice(i, 1); continue; }
+    drawBone(b, g.frameCount);
+    const dist = Math.hypot(b.x - g.ship.x, b.y - g.ship.y);
+    if (dist < SHIP_SIZE * 0.7) {
+      addParticles(b.x, b.y, '#ffd700', 10);
+      g.bones.splice(i, 1);
+      g.score += 25;
+      updateHUD();
+      if (g.score >= WIN_SCORE) {
+        gameWin();
+        return;
+      }
+    }
+  }
+
+  // Score drift
+  g.score += 1;
+  if (g.frameCount % 3 === 0) updateHUD();
+
+  if (g.score >= WIN_SCORE) { gameWin(); return; }
+
+  // Particles
+  drawParticles();
+  for (let i = g.particles.length - 1; i >= 0; i--) {
+    const p = g.particles[i];
+    p.x += p.vx; p.y += p.vy;
+    p.life -= p.decay;
+    if (p.life <= 0) g.particles.splice(i, 1);
+  }
+
+  // Ship
+  drawShip(g.ship.x, g.ship.y, g.ship.invincible);
+
+  // Score sparkle at 100
+  if (g.score % 100 < 2 && g.score > 0) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(255,215,0,0.15)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.restore();
+  }
+
+  animFrame = requestAnimationFrame(gameLoop);
+}
+
+function gameOver() {
+  gameState.running = false;
+  document.getElementById('final-score').textContent = gameState.score;
+  document.getElementById('game-over-overlay').classList.remove('hidden');
+}
+
+function gameWin() {
+  gameState.running = false;
+  document.getElementById('win-score').textContent = gameState.score;
+  document.getElementById('game-win-overlay').classList.remove('hidden');
+}
+</script>
+</body>
+</html>
