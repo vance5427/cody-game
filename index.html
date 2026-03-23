@@ -1,693 +1,1630 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CODY: Captain of the Discovery</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@700&family=Special+Elite&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>CODY: Captain of the Discovery</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #050a1a;
+    --navy2: #0a1530;
+    --navy3: #0d1f3c;
+    --gold: #ffd700;
+    --gold2: #ffb800;
+    --blue: #00bfff;
+    --blue2: #0090cc;
+    --text: #e8f4ff;
+    --dim: #8aafcc;
+    --panel-border: 3px solid var(--gold);
+    --shadow: 0 0 32px rgba(0,191,255,0.3), 0 4px 20px rgba(0,0,0,0.7);
+  }
 
-    :root {
-      --navy: #0a0e1a;
-      --navy2: #0d1530;
-      --gold: #ffd700;
-      --gold2: #ffb700;
-      --blue: #00c8ff;
-      --blue2: #0080ff;
-      --dark: #050810;
-      --text: #e8e8f0;
-      --caption-bg: rgba(5, 8, 20, 0.92);
-    }
+  html, body {
+    height: 100%;
+    background: var(--navy);
+    color: var(--text);
+    font-family: 'Georgia', 'Times New Roman', serif;
+    overflow: hidden;
+  }
 
-    html, body {
-      height: 100%;
-      background: var(--dark);
-      color: var(--text);
-      font-family: 'Special Elite', serif;
-      overflow: hidden;
-    }
+  /* Stars background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(1px 1px at 25% 60%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 40% 30%, rgba(255,255,255,0.9) 0%, transparent 100%),
+      radial-gradient(1px 1px at 55% 80%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 70% 20%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 85% 50%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(1px 1px at 92% 75%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 5% 90%, rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 45%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 33% 10%, rgba(255,255,255,0.9) 0%, transparent 100%),
+      radial-gradient(1px 1px at 78% 88%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 15% 40%, rgba(255,255,255,0.8) 0%, transparent 100%),
+      radial-gradient(2px 2px at 48% 68%, rgba(255,215,0,0.6) 0%, transparent 100%),
+      radial-gradient(2px 2px at 20% 75%, rgba(0,191,255,0.5) 0%, transparent 100%),
+      radial-gradient(2px 2px at 88% 12%, rgba(255,215,0,0.4) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
 
-    /* Stars background */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        radial-gradient(1px 1px at 10% 15%, #fff 0%, transparent 100%),
-        radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.7) 0%, transparent 100%),
-        radial-gradient(1px 1px at 40% 10%, rgba(255,255,255,0.5) 0%, transparent 100%),
-        radial-gradient(1px 1px at 60% 70%, #fff 0%, transparent 100%),
-        radial-gradient(1px 1px at 75% 30%, rgba(255,255,255,0.8) 0%, transparent 100%),
-        radial-gradient(1px 1px at 85% 55%, rgba(255,255,255,0.6) 0%, transparent 100%),
-        radial-gradient(1px 1px at 90% 80%, #fff 0%, transparent 100%),
-        radial-gradient(1px 1px at 15% 80%, rgba(255,255,255,0.5) 0%, transparent 100%),
-        radial-gradient(1px 1px at 50% 50%, rgba(255,255,255,0.4) 0%, transparent 100%),
-        radial-gradient(2px 2px at 30% 60%, rgba(0,200,255,0.3) 0%, transparent 100%),
-        radial-gradient(2px 2px at 70% 20%, rgba(255,215,0,0.2) 0%, transparent 100%);
-      pointer-events: none;
-      z-index: 0;
-    }
+  /* Progress bar */
+  #progress-bar-container {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    z-index: 100;
+  }
+  #progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--gold));
+    transition: width 0.4s ease;
+    box-shadow: 0 0 8px var(--blue);
+  }
 
-    /* ── PANEL STAGE ── */
-    #stage {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1;
-    }
+  /* Chapter label */
+  #chapter-label {
+    position: fixed;
+    top: 10px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--dim);
+    z-index: 100;
+    white-space: nowrap;
+  }
 
-    /* ── PANEL ── */
-    .panel {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 100%;
-      padding: 20px;
-      animation: panelIn 0.5s ease forwards;
-      position: relative;
-    }
-    .panel.active { display: flex; }
+  /* Main scene */
+  #scene {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    padding: 50px 16px 80px;
+  }
 
-    @keyframes panelIn {
-      from { opacity: 0; transform: scale(0.96) translateY(10px); }
-      to   { opacity: 1; transform: scale(1) translateY(0); }
-    }
+  /* Panel */
+  .panel {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 680px;
+    animation: panelIn 0.5s ease forwards;
+    gap: 20px;
+  }
+  .panel.active { display: flex; }
 
-    /* ── CHAPTER TITLE CARD ── */
-    .panel.chapter-card {
-      background: radial-gradient(ellipse at center, #0d1f4a 0%, var(--dark) 70%);
-    }
-    .chapter-badge {
-      font-family: 'Bangers', cursive;
-      font-size: clamp(14px, 3vw, 18px);
-      letter-spacing: 4px;
-      color: var(--blue);
-      text-transform: uppercase;
-      margin-bottom: 12px;
-      text-shadow: 0 0 10px var(--blue);
-    }
-    .chapter-number {
-      font-family: 'Bangers', cursive;
-      font-size: clamp(48px, 12vw, 100px);
-      color: var(--gold);
-      line-height: 1;
-      text-shadow:
-        3px 3px 0 #8a6200,
-        6px 6px 0 #3a2800,
-        0 0 30px var(--gold2),
-        0 0 60px rgba(255,215,0,0.3);
-      margin-bottom: 10px;
-    }
-    .chapter-title {
-      font-family: 'Bangers', cursive;
-      font-size: clamp(28px, 7vw, 64px);
-      color: #fff;
-      text-align: center;
-      letter-spacing: 3px;
-      text-shadow:
-        2px 2px 0 var(--navy),
-        4px 4px 0 rgba(0,0,0,0.5),
-        0 0 20px rgba(255,255,255,0.2);
-      max-width: 90%;
-    }
-    .chapter-divider {
-      width: 200px;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
-      margin: 20px auto;
-    }
+  @keyframes panelIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
-    /* ── TITLE CARD (cover) ── */
-    .panel.title-card {
-      background: radial-gradient(ellipse at center, #0a1a3a 0%, var(--dark) 70%);
-    }
-    .comic-title {
-      font-family: 'Bangers', cursive;
-      font-size: clamp(36px, 10vw, 90px);
-      color: var(--gold);
-      text-align: center;
-      line-height: 1;
-      text-shadow:
-        3px 3px 0 #8a6200,
-        6px 6px 0 #3a2800,
-        0 0 40px var(--gold2),
-        0 0 80px rgba(255,215,0,0.2);
-      letter-spacing: 2px;
-      margin-bottom: 8px;
-    }
-    .comic-subtitle {
-      font-family: 'Bangers', cursive;
-      font-size: clamp(16px, 4vw, 32px);
-      color: var(--blue);
-      letter-spacing: 6px;
-      text-shadow: 0 0 20px var(--blue);
-      margin-bottom: 20px;
-    }
-    .stardate {
-      font-family: 'Special Elite', serif;
-      font-size: clamp(12px, 2.5vw, 18px);
-      color: rgba(255,255,255,0.6);
-      letter-spacing: 3px;
-    }
+  /* Title panel */
+  .panel-title {
+    text-align: center;
+  }
+  .panel-title .ship-name {
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 8px;
+  }
+  .panel-title h1 {
+    font-size: clamp(1.8rem, 6vw, 3rem);
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(255,215,0,0.5), 0 0 40px rgba(255,215,0,0.2);
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .panel-title .subtitle {
+    font-size: 0.8rem;
+    color: var(--dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
 
-    /* ── PHOTO PANEL ── */
-    .photo-frame {
-      position: relative;
-      max-width: min(520px, 90vw);
-      width: 100%;
-    }
-    .photo-frame img {
-      width: 100%;
-      height: auto;
-      max-height: 55vh;
-      object-fit: cover;
-      border-radius: 16px;
-      border: 3px solid var(--gold);
-      box-shadow:
-        0 0 0 6px rgba(255,215,0,0.15),
-        0 8px 32px rgba(0,0,0,0.8),
-        0 0 60px rgba(255,215,0,0.1),
-        inset 0 0 30px rgba(0,0,0,0.3);
-      display: block;
-    }
-    .photo-corner {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      border-color: var(--blue);
-      border-style: solid;
-    }
-    .photo-corner.tl { top: -4px; left: -4px; border-width: 3px 0 0 3px; }
-    .photo-corner.tr { top: -4px; right: -4px; border-width: 3px 3px 0 0; }
-    .photo-corner.bl { bottom: -4px; left: -4px; border-width: 0 0 3px 3px; }
-    .photo-corner.br { bottom: -4px; right: -4px; border-width: 0 3px 3px 0; }
+  /* Photo */
+  .comic-photo {
+    width: 100%;
+    max-width: 520px;
+    max-height: 55vh;
+    object-fit: cover;
+    border-radius: 16px;
+    border: 3px solid var(--gold);
+    box-shadow: var(--shadow), 0 0 0 1px rgba(255,215,0,0.2);
+    display: block;
+  }
 
-    /* ── CAPTION BOX ── */
-    .caption {
-      margin-top: 16px;
-      max-width: min(520px, 90vw);
-      width: 100%;
-      background: var(--caption-bg);
-      border: 2px solid rgba(255,215,0,0.4);
-      border-radius: 8px;
-      padding: 12px 18px;
-      font-family: 'Special Elite', serif;
-      font-size: clamp(14px, 2.5vw, 18px);
-      color: var(--text);
-      text-align: center;
-      line-height: 1.5;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-    }
-    .caption em {
-      color: var(--gold);
-      font-style: normal;
-    }
-    .caption strong {
-      color: var(--blue);
-    }
+  /* Caption box */
+  .caption {
+    background: rgba(5,10,26,0.92);
+    border: 1px solid rgba(255,215,0,0.3);
+    border-radius: 12px;
+    padding: 16px 22px;
+    font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+    line-height: 1.6;
+    text-align: center;
+    color: var(--text);
+    max-width: 520px;
+    width: 100%;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+    font-style: italic;
+  }
+  .caption strong {
+    font-style: normal;
+    color: var(--gold);
+  }
 
-    /* ── TEXT-ONLY PANELS ── */
-    .panel-text-bg {
-      background: radial-gradient(ellipse at center, #0d1a3a 0%, var(--dark) 70%);
-    }
-    .panel-narration {
-      max-width: min(600px, 90vw);
-      text-align: center;
-    }
-    .panel-narration .big-quote {
-      font-family: 'Special Elite', serif;
-      font-size: clamp(20px, 4.5vw, 38px);
-      color: #fff;
-      line-height: 1.5;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
-      margin-bottom: 20px;
-    }
-    .panel-narration .big-quote em {
-      color: var(--gold);
-      font-style: normal;
-    }
-    .panel-narration .big-quote strong {
-      color: var(--blue);
-    }
-    .panel-icon {
-      font-size: clamp(40px, 10vw, 80px);
-      margin-bottom: 20px;
-      filter: drop-shadow(0 0 20px rgba(0,200,255,0.5));
-    }
-    .alien-visual {
-      font-size: clamp(50px, 12vw, 100px);
-      text-align: center;
-      line-height: 1;
-      margin-bottom: 20px;
-      animation: glow 2s ease-in-out infinite alternate;
-    }
-    @keyframes glow {
-      from { filter: drop-shadow(0 0 10px rgba(0,200,255,0.5)); }
-      to   { filter: drop-shadow(0 0 30px rgba(0,200,255,1)) drop-shadow(0 0 60px rgba(0,200,255,0.5)); }
-    }
-    .darkness-effect {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.95) 100%);
-      pointer-events: none;
-      border-radius: inherit;
-    }
+  /* Text-only panel */
+  .panel-text-only {
+    text-align: center;
+    max-width: 520px;
+  }
+  .panel-text-only .chapter-tag {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 12px;
+  }
+  .panel-text-only .panel-prose {
+    font-size: clamp(1.1rem, 3vw, 1.4rem);
+    line-height: 1.7;
+    color: var(--text);
+    font-style: italic;
+  }
 
-    /* ── CREDITS PANEL ── */
-    .credits-panel {
-      text-align: center;
-    }
-    .credits-title {
-      font-family: 'Bangers', cursive;
-      font-size: clamp(28px, 7vw, 60px);
-      color: var(--gold);
-      text-shadow:
-        2px 2px 0 #8a6200,
-        4px 4px 0 #3a2800,
-        0 0 30px var(--gold2);
-      margin-bottom: 8px;
-      letter-spacing: 2px;
-    }
-    .credits-subtitle {
-      font-family: 'Bangers', cursive;
-      font-size: clamp(16px, 3.5vw, 28px);
-      color: var(--blue);
-      letter-spacing: 4px;
-      margin-bottom: 20px;
-      text-shadow: 0 0 15px var(--blue);
-    }
-    .credits-list {
-      font-family: 'Special Elite', serif;
-      font-size: clamp(12px, 2vw, 16px);
-      color: rgba(255,255,255,0.6);
-      line-height: 2;
-    }
-    .credits-list span { color: rgba(255,255,255,0.9); }
-    .to-be-continued {
-      font-family: 'Bangers', cursive;
-      font-size: clamp(20px, 5vw, 42px);
-      color: var(--gold);
-      margin-top: 20px;
-      letter-spacing: 3px;
-      animation: pulse 1.5s ease-in-out infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
-    }
+  /* BUTTONS */
+  #nav-prev, #nav-next {
+    position: fixed;
+    bottom: 20px;
+    z-index: 100;
+    padding: 12px 24px;
+    border-radius: 30px;
+    border: 2px solid var(--gold);
+    background: rgba(5,10,26,0.9);
+    color: var(--gold);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    backdrop-filter: blur(8px);
+  }
+  #nav-prev { left: 16px; }
+  #nav-next { right: 16px; }
+  #nav-prev:hover, #nav-next:hover {
+    background: var(--gold);
+    color: var(--navy);
+    box-shadow: 0 0 16px rgba(255,215,0,0.5);
+  }
+  #nav-prev:disabled, #nav-next:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+  #nav-prev:disabled:hover, #nav-next:disabled:hover {
+    background: rgba(5,10,26,0.9);
+    color: var(--gold);
+    box-shadow: none;
+  }
 
-    /* ── NAVIGATION ── */
-    #nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 24px;
-      background: linear-gradient(to top, rgba(5,8,20,0.95) 0%, transparent 100%);
-      z-index: 100;
-    }
-    .nav-btn {
-      font-family: 'Bangers', cursive;
-      font-size: clamp(14px, 3vw, 20px);
-      letter-spacing: 2px;
-      padding: 10px 24px;
-      border: 2px solid var(--gold);
-      background: rgba(10, 14, 26, 0.9);
-      color: var(--gold);
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-shadow: 0 0 10px rgba(255,215,0,0.5);
-      box-shadow: 0 0 10px rgba(255,215,0,0.2);
-    }
-    .nav-btn:hover {
-      background: rgba(255,215,0,0.15);
-      box-shadow: 0 0 20px rgba(255,215,0,0.4);
-      transform: translateY(-1px);
-    }
-    .nav-btn:disabled {
-      opacity: 0.2;
-      cursor: default;
-      transform: none;
-    }
-    #panel-counter {
-      font-family: 'Special Elite', serif;
-      font-size: clamp(11px, 2vw, 14px);
-      color: rgba(255,255,255,0.4);
-      letter-spacing: 2px;
-    }
+  /* ============================================
+     MINI GAME SHARED STYLES
+     ============================================ */
+  .game-panel {
+    width: 100%;
+    max-width: 560px;
+    text-align: center;
+  }
+  .game-title {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 4px;
+  }
+  .game-name {
+    font-size: clamp(1.2rem, 4vw, 1.6rem);
+    color: var(--gold);
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+  .game-instructions {
+    font-size: 0.82rem;
+    color: var(--dim);
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+  .game-canvas-wrapper {
+    position: relative;
+    display: inline-block;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid rgba(0,191,255,0.4);
+    box-shadow: 0 0 24px rgba(0,191,255,0.2);
+  }
+  canvas {
+    display: block;
+    background: var(--navy2);
+  }
+  .game-status {
+    margin-top: 12px;
+    font-size: 0.9rem;
+    min-height: 1.4em;
+    color: var(--gold);
+    font-weight: bold;
+  }
+  .game-win-msg {
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+    color: #80ff80;
+    font-style: italic;
+    margin-top: 8px;
+  }
+  .game-btn {
+    margin-top: 12px;
+    padding: 10px 24px;
+    border-radius: 24px;
+    border: 2px solid var(--blue);
+    background: rgba(5,10,26,0.9);
+    color: var(--blue);
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .game-btn:hover {
+    background: var(--blue);
+    color: var(--navy);
+  }
 
-    /* ── PROGRESS BAR ── */
-    #progress-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--blue2), var(--gold));
-      transition: width 0.4s ease;
-      z-index: 200;
-      box-shadow: 0 0 8px var(--gold);
-    }
+  /* ============================================
+     GAME 2 — HARMONICS
+     ============================================ */
+  .harmonics-grid {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .harmonic-btn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    cursor: pointer;
+    font-size: 1.5rem;
+    transition: transform 0.1s, box-shadow 0.15s;
+    outline: none;
+    position: relative;
+    overflow: hidden;
+  }
+  .harmonic-btn.lit {
+    transform: scale(1.15);
+    box-shadow: 0 0 28px 8px currentColor;
+  }
+  .harmonic-btn:disabled { cursor: default; }
+  .hbtn-blue  { background: #1a5aff; color: #1a5aff; border-color: #4488ff; }
+  .hbtn-gold  { background: #ffd700; color: #ffd700; border-color: #ffe066; }
+  .hbtn-red   { background: #ff3a3a; color: #ff3a3a; border-color: #ff7777; }
+  .hbtn-green { background: #00cc66; color: #00cc66; border-color: #00ff88; }
 
-    /* ── CLICK HINT ── */
-    #click-hint {
-      position: fixed;
-      bottom: 70px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-family: 'Special Elite', serif;
-      font-size: 12px;
-      color: rgba(255,255,255,0.3);
-      letter-spacing: 2px;
-      animation: fadeHint 3s ease forwards;
-      pointer-events: none;
-      z-index: 50;
-    }
-    @keyframes fadeHint {
-      0% { opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; }
-    }
-  </style>
+  /* ============================================
+     GAME 3 — LIGHTS OUT
+     ============================================ */
+  .lights-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 80px);
+    grid-template-rows: repeat(3, 80px);
+    gap: 8px;
+    margin: 12px auto;
+    justify-content: center;
+  }
+  .light-tile {
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    border: 2px solid rgba(0,191,255,0.3);
+    background: var(--navy3);
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  .light-tile.on {
+    background: radial-gradient(circle, #00eeff 0%, #0077cc 100%);
+    box-shadow: 0 0 20px rgba(0,238,255,0.7);
+    border-color: #00eeff;
+  }
+
+  /* ============================================
+     GAME 4 — MAZE
+     ============================================ */
+  #maze-canvas { cursor: crosshair; touch-action: none; }
+
+  /* ============================================
+     ENDING PANEL
+     ============================================ */
+  .ending-panel {
+    text-align: center;
+    width: 100%;
+    max-width: 580px;
+  }
+  .ending-panel img {
+    width: 100%;
+    max-height: 45vh;
+    object-fit: cover;
+    border-radius: 16px;
+    border: 3px solid var(--gold);
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+  }
+  .ending-title {
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
+    color: var(--gold);
+    text-shadow: 0 0 16px rgba(255,215,0,0.5);
+    margin-bottom: 6px;
+  }
+  .ending-subtitle {
+    font-size: 1rem;
+    color: var(--blue);
+    font-style: italic;
+    margin-bottom: 18px;
+  }
+  .credits {
+    font-size: 0.78rem;
+    color: var(--dim);
+    line-height: 2;
+    letter-spacing: 0.05em;
+  }
+  .credits span {
+    color: var(--text);
+  }
+  .restart-btn {
+    margin-top: 20px;
+    padding: 12px 32px;
+    border-radius: 30px;
+    border: 2px solid var(--gold);
+    background: rgba(5,10,26,0.9);
+    color: var(--gold);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .restart-btn:hover {
+    background: var(--gold);
+    color: var(--navy);
+  }
+
+  @media (max-width: 480px) {
+    .harmonic-btn { width: 64px; height: 64px; }
+    .lights-grid { grid-template-columns: repeat(3, 72px); grid-template-rows: repeat(3, 72px); }
+    .light-tile { width: 72px; height: 72px; }
+    canvas { max-width: 100%; }
+  }
+</style>
 </head>
 <body>
 
-<div id="progress-bar"></div>
-<div id="click-hint">CLICK ANYWHERE TO ADVANCE</div>
+<div id="progress-bar-container">
+  <div id="progress-bar" style="width:0%"></div>
+</div>
+<div id="chapter-label">Chapter 1 — The Mission</div>
 
-<div id="stage">
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- PANEL 0 — COVER / TITLE                     -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div class="panel title-card active" id="p0">
-    <div class="photo-frame" style="margin-bottom:20px;">
-      <img src="cody2.jpg" alt="Captain Cody" />
-      <div class="photo-corner tl"></div>
-      <div class="photo-corner tr"></div>
-      <div class="photo-corner bl"></div>
-      <div class="photo-corner br"></div>
-    </div>
-    <div class="comic-title">CODY</div>
-    <div class="comic-subtitle">CAPTAIN OF THE DISCOVERY</div>
-    <div class="stardate">USS BISCUIT · STARDATE 2026.04</div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- CHAPTER 1 TITLE CARD                        -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div class="panel chapter-card" id="p1">
-    <div class="chapter-badge">Chapter One</div>
-    <div class="chapter-number">I</div>
-    <div class="chapter-divider"></div>
-    <div class="chapter-title">THE MISSION</div>
-  </div>
-
-  <!-- CH1 P1: Bridge scene -->
-  <div class="panel panel-text-bg" id="p2">
-    <div class="panel-narration">
-      <div class="panel-icon">🚀</div>
-      <div class="big-quote">Captain <em>Cody</em> surveys the stars.<br/>The crew awaits his command.<br/><br/><strong>The mission: unknown.<br/>The resolve: absolute.</strong></div>
-    </div>
-  </div>
-
-  <!-- CH1 P2: Cody teeth -->
-  <div class="panel" id="p3">
-    <div class="photo-frame">
-      <img src="cody-teeth.jpg" alt="Cody showing teeth" />
-      <div class="photo-corner tl"></div>
-      <div class="photo-corner tr"></div>
-      <div class="photo-corner bl"></div>
-      <div class="photo-corner br"></div>
-    </div>
-    <div class="caption">No one questioned the Captain's authority.<br/><em>Not after they saw the teeth.</em></div>
-  </div>
-
-  <!-- CH1 P3: Bob in car -->
-  <div class="panel" id="p4">
-    <div class="photo-frame">
-      <img src="cody-bob-car.jpg" alt="Bob holding Cody while driving" />
-      <div class="photo-corner tl"></div>
-      <div class="photo-corner tr"></div>
-      <div class="photo-corner bl"></div>
-      <div class="photo-corner br"></div>
-    </div>
-    <div class="caption"><strong>Chief Scientist Bob</strong> ran the calculations.<br/>He was rarely wrong.<br/><em>Except about parking.</em></div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- CHAPTER 2 TITLE CARD                        -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div class="panel chapter-card" id="p5">
-    <div class="chapter-badge">Chapter Two</div>
-    <div class="chapter-number">II</div>
-    <div class="chapter-divider"></div>
-    <div class="chapter-title">FIRST CONTACT</div>
-  </div>
-
-  <!-- CH2 P1: Signal -->
-  <div class="panel panel-text-bg" id="p6">
-    <div class="panel-narration">
-      <div class="panel-icon">📡</div>
-      <div class="big-quote"><strong>Leora</strong> detected a signal.<br/><em>Not noise.</em><br/>Music.</div>
-    </div>
-  </div>
-
-  <!-- CH2 P2: Glimmerfins appear -->
-  <div class="panel panel-text-bg" id="p7">
-    <div class="panel-narration">
-      <div class="alien-visual">✦ ✧ ✦</div>
-      <div class="big-quote">The <em>Glimmerfins</em> appeared—<br/>crystalline beings made of light.<br/><br/>They shimmered like <strong>fractured starlight</strong>,<br/>singing in frequencies no human ear could hold.</div>
-    </div>
-  </div>
-
-  <!-- CH2 P3: Beautiful and terrified -->
-  <div class="panel panel-text-bg" id="p8">
-    <div class="panel-narration">
-      <div class="alien-visual">💎</div>
-      <div class="big-quote">They were <em>beautiful.</em><br/><br/>And terrified.</div>
-    </div>
-  </div>
-
-  <!-- CH2 P4: Leora translates -->
-  <div class="panel panel-text-bg" id="p9">
-    <div class="panel-narration">
-      <div class="panel-icon">🎵</div>
-      <div class="big-quote">Leora translated their song.<br/><br/><em>"Something is hunting us,"</em><br/>they sang.<br/><br/><strong>"And it is very, very close."</strong></div>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- CHAPTER 3 TITLE CARD                        -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div class="panel chapter-card" id="p10">
-    <div class="chapter-badge">Chapter Three</div>
-    <div class="chapter-number">III</div>
-    <div class="chapter-divider"></div>
-    <div class="chapter-title">THE VOID HUNTERS</div>
-  </div>
-
-  <!-- CH3 P1: Darkness creeping -->
-  <div class="panel panel-text-bg" id="p11" style="background:radial-gradient(ellipse at center, #050a15 0%, #000 70%);">
-    <div class="darkness-effect"></div>
-    <div class="panel-narration" style="position:relative;z-index:1;">
-      <div class="panel-icon" style="filter:drop-shadow(0 0 20px rgba(255,0,0,0.5));">⚫</div>
-      <div class="big-quote" style="color:rgba(200,200,220,0.8);">The screens went dark.<br/>One by one.<br/><br/><em style="color:#ff4444;">Something was coming.</em></div>
-    </div>
-  </div>
-
-  <!-- CH3 P2: Cody on bed — survived baths -->
-  <div class="panel" id="p12">
-    <div class="photo-frame">
-      <img src="cody-bed.jpg" alt="Cody lounging on bed" />
-      <div class="photo-corner tl"></div>
-      <div class="photo-corner tr"></div>
-      <div class="photo-corner bl"></div>
-      <div class="photo-corner br"></div>
-    </div>
-    <div class="caption">The Captain did not panic.<br/>He had survived worse.<br/><em>He had survived baths.</em></div>
-  </div>
-
-  <!-- CH3 P3: Vance asleep -->
-  <div class="panel panel-text-bg" id="p13">
-    <div class="panel-narration">
-      <div class="panel-icon">💤</div>
-      <div class="big-quote">Engineering reported<br/><em>total power failure.</em><br/><br/><strong>Vance</strong> was already asleep<br/>at his station.</div>
-    </div>
-  </div>
-
-  <!-- CH3 P4: Sue diplomatic -->
-  <div class="panel panel-text-bg" id="p14">
-    <div class="panel-narration">
-      <div class="panel-icon">📻</div>
-      <div class="big-quote"><strong>Sue</strong> opened a diplomatic channel.<br/><br/><em>"Wait."</em><br/><br/>"I think they're just... <em>lost.</em>"</div>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- CHAPTER 4 TITLE CARD                        -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div class="panel chapter-card" id="p15">
-    <div class="chapter-badge">Chapter Four</div>
-    <div class="chapter-number">IV</div>
-    <div class="chapter-divider"></div>
-    <div class="chapter-title">THE THERAPY SESSION IN SPACE</div>
-  </div>
-
-  <!-- CH4 P1: Sue faces void hunters -->
-  <div class="panel panel-text-bg" id="p16">
-    <div class="panel-narration">
-      <div class="panel-icon">🖖</div>
-      <div class="big-quote"><strong>Sue</strong> stepped forward.<br/><br/><em>"Tell me about your home."</em></div>
-    </div>
-  </div>
-
-  <!-- CH4 P2: Wandering so long -->
-  <div class="panel panel-text-bg" id="p17">
-    <div class="panel-narration">
-      <div class="alien-visual" style="font-size:clamp(30px,8vw,70px);opacity:0.6;">⚫ · ⚫</div>
-      <div class="big-quote">They had been wandering<br/>so long...<br/><br/><em>...they'd forgotten<br/>what they were looking for.</em></div>
-    </div>
-  </div>
-
-  <!-- CH4 P3: Cody standing — revelation -->
-  <div class="panel" id="p18">
-    <div class="photo-frame">
-      <img src="cody-standing.jpg" alt="Cody standing on hind legs" />
-      <div class="photo-corner tl"></div>
-      <div class="photo-corner tr"></div>
-      <div class="photo-corner bl"></div>
-      <div class="photo-corner br"></div>
-    </div>
-    <div class="caption"><em>Captain Cody rose.</em><br/>This was the moment.<br/><strong>He had been waiting for this his entire career.</strong></div>
-  </div>
-
-  <!-- CH4 P4: Barked once -->
-  <div class="panel panel-text-bg" id="p19">
-    <div class="panel-narration">
-      <div class="panel-icon">🐾</div>
-      <div class="big-quote">He barked once.<br/><br/><em>Soft.</em><br/><br/>Like he was saying:<br/><strong>"I see you."</strong></div>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- CHAPTER 5 TITLE CARD                        -->
-  <!-- ═══════════════════════════════════════════ -->
-  <div class="panel chapter-card" id="p20">
-    <div class="chapter-badge">Chapter Five</div>
-    <div class="chapter-number">V</div>
-    <div class="chapter-divider"></div>
-    <div class="chapter-title">HOME</div>
-  </div>
-
-  <!-- CH5 P1: Glimmerfins offer frequency -->
-  <div class="panel panel-text-bg" id="p21">
-    <div class="panel-narration">
-      <div class="alien-visual">✦✧✦✧✦</div>
-      <div class="big-quote">The <em>Glimmerfins</em> offered their<br/>harmonic frequency—<br/><br/><em>"So you can always<br/>find your way back."</em></div>
-    </div>
-  </div>
-
-  <!-- CH5 P2: Bob and Cody cuddle -->
-  <div class="panel" id="p22">
-    <div class="photo-frame">
-      <img src="cody-bob-cuddle.jpg" alt="Bob and Cody cuddling" />
-      <div class="photo-corner tl"></div>
-      <div class="photo-corner tr"></div>
-      <div class="photo-corner bl"></div>
-      <div class="photo-corner br"></div>
-    </div>
-    <div class="caption"><strong>Chief Scientist Bob</strong> held the Captain close.<br/><em>Mission complete.</em></div>
-  </div>
-
-  <!-- CH5 P3: Cody asleep — final log -->
-  <div class="panel" id="p23">
-    <div class="photo-frame">
-      <img src="cody-asleep.jpg" alt="Cody asleep with bookshelf" />
-      <div class="photo-corner tl"></div>
-      <div class="photo-corner tr"></div>
-      <div class="photo-corner bl"></div>
-      <div class="photo-corner br"></div>
-    </div>
-    <div class="caption"><em>Captain's Log, final entry:</em><br/><strong>"Good boy."</strong></div>
-  </div>
-
-  <!-- CH5 P4: Credits -->
-  <div class="panel panel-text-bg" id="p24">
-    <div class="credits-panel">
-      <div class="credits-title">CODY</div>
-      <div class="credits-subtitle">CAPTAIN OF THE DISCOVERY</div>
-      <div class="chapter-divider"></div>
-      <div class="credits-list">
-        Captain · <span>Cody</span><br/>
-        Chief Scientist · <span>Bob</span><br/>
-        Communications Officer · <span>Leora</span><br/>
-        Ship's Counselor · <span>Sue</span><br/>
-        Engineering (Asleep) · <span>Vance</span><br/>
-        The Glimmerfins · <span>Unknown Origin</span><br/>
-        The Void Hunters · <span>Just Lost</span>
-      </div>
-      <div class="to-be-continued">✦ TO BE CONTINUED ✦</div>
-    </div>
-  </div>
-
-</div><!-- /#stage -->
-
-<!-- ── NAVIGATION ── -->
-<div id="nav">
-  <button class="nav-btn" id="btn-prev" onclick="navigate(-1)" disabled>← PREV</button>
-  <span id="panel-counter">1 / 25</span>
-  <button class="nav-btn" id="btn-next" onclick="navigate(1)">NEXT →</button>
+<div id="scene">
+  <!-- All panels injected by JS -->
 </div>
 
+<button id="nav-prev" onclick="navigate(-1)">← Prev</button>
+<button id="nav-next" onclick="navigate(1)">Next →</button>
+
 <script>
-  const panels = document.querySelectorAll('.panel');
-  const total = panels.length;
-  let current = 0;
+// ============================================================
+//  PANEL DEFINITIONS
+// ============================================================
+const PANELS = [
 
-  function showPanel(idx) {
-    panels.forEach(p => p.classList.remove('active'));
-    panels[idx].classList.add('active');
-    current = idx;
+  // 0 — TITLE
+  {
+    chapter: 'Prologue',
+    type: 'title',
+    render() {
+      return `
+        <div class="panel panel-title" id="p0">
+          <div class="ship-name">★ A Leemur & Vance Production ★</div>
+          <h1>CODY<br>CAPTAIN OF THE<br>DISCOVERY</h1>
+          <div class="subtitle">An illustrated space odyssey</div>
+          <img class="comic-photo" src="cody2.jpg" alt="Captain Cody">
+        </div>`;
+    }
+  },
 
-    document.getElementById('btn-prev').disabled = (idx === 0);
-    document.getElementById('btn-next').disabled = (idx === total - 1);
-    document.getElementById('panel-counter').textContent = `${idx + 1} / ${total}`;
+  // 1 — TEETH
+  {
+    chapter: 'Chapter 1 — The Mission',
+    type: 'photo',
+    render() {
+      return `
+        <div class="panel" id="p1">
+          <img class="comic-photo" src="cody-teeth.jpg" alt="The Teeth">
+          <div class="caption">"No one questioned the Captain's authority. Not after they saw <strong>the teeth</strong>."</div>
+        </div>`;
+    }
+  },
 
-    const pct = (idx / (total - 1)) * 100;
-    document.getElementById('progress-bar').style.width = pct + '%';
+  // 2 — BOB CAR
+  {
+    chapter: 'Chapter 1 — The Mission',
+    type: 'photo',
+    render() {
+      return `
+        <div class="panel" id="p2">
+          <img class="comic-photo" src="cody-bob-car.jpg" alt="Chief Scientist Bob">
+          <div class="caption">"Chief Scientist <strong>Bob</strong> ran the numbers. He was rarely wrong. Except about parking."</div>
+        </div>`;
+    }
+  },
+
+  // 3 — LEORA SIGNAL
+  {
+    chapter: 'Chapter 1 — The Mission',
+    type: 'text',
+    render() {
+      return `
+        <div class="panel panel-text-only" id="p3">
+          <div class="chapter-tag">Chapter 1 — The Mission</div>
+          <div class="panel-prose">Leora detected a signal from the Outer Bone Nebula.<br><br>Not noise.<br><br><strong style="color:var(--gold)">Music.</strong></div>
+        </div>`;
+    }
+  },
+
+  // 4 — CODY SETS COURSE
+  {
+    chapter: 'Chapter 1 — The Mission',
+    type: 'text',
+    render() {
+      return `
+        <div class="panel panel-text-only" id="p4">
+          <div class="chapter-tag">Chapter 1 — The Mission</div>
+          <div class="panel-prose">Captain Cody set course.<br><br>His ears flopped with <strong style="color:var(--blue)">determination</strong>.</div>
+        </div>`;
+    }
+  },
+
+  // 5 — MINI GAME 1
+  {
+    chapter: 'Mission: Navigate to the Signal',
+    type: 'game',
+    gameId: 1,
+    render() {
+      return `
+        <div class="panel game-panel" id="p5">
+          <div class="game-title">★ Mini Game 1 ★</div>
+          <div class="game-name">"Navigate to the Signal"</div>
+          <div class="game-instructions">Move Cody's ship left/right (← → or A/D or tap sides).<br>Avoid asteroids. Reach the pulsing star. 15 seconds!</div>
+          <div class="game-canvas-wrapper">
+            <canvas id="g1-canvas" width="480" height="320"></canvas>
+          </div>
+          <div class="game-status" id="g1-status">⏱ 15</div>
+          <div class="game-win-msg" id="g1-winmsg" style="display:none">"Signal acquired! The Glimmerfins await."</div>
+          <button class="game-btn" id="g1-restart" onclick="initGame1()" style="display:none">Try Again</button>
+        </div>`;
+    }
+  },
+
+  // 6 — GLIMMERFINS
+  {
+    chapter: 'Chapter 2 — First Contact',
+    type: 'text',
+    render() {
+      return `
+        <div class="panel panel-text-only" id="p6">
+          <div class="chapter-tag">Chapter 2 — First Contact</div>
+          <div class="panel-prose">The <strong style="color:var(--blue)">Glimmerfins</strong>.<br><br>Crystalline beings made of refracted light.</div>
+        </div>`;
+    }
+  },
+
+  // 7 — TERRIFIED
+  {
+    chapter: 'Chapter 2 — First Contact',
+    type: 'text',
+    render() {
+      return `
+        <div class="panel panel-text-only" id="p7">
+          <div class="chapter-tag">Chapter 2 — First Contact</div>
+          <div class="panel-prose">They were beautiful.<br><br>And <strong style="color:var(--gold)">terrified</strong>.<br><br>Something was hunting them.</div>
+        </div>`;
+    }
+  },
+
+  // 8 — LEORA TRANSLATES
+  {
+    chapter: 'Chapter 2 — First Contact',
+    type: 'text',
+    render() {
+      return `
+        <div class="panel panel-text-only" id="p8">
+          <div class="chapter-tag">Chapter 2 — First Contact</div>
+          <div class="panel-prose">Only <strong style="color:var(--gold)">Leora</strong> could translate their harmonic language.</div>
+        </div>`;
+    }
+  },
+
+  // 9 — MINI GAME 2
+  {
+    chapter: 'Mission: Match the Harmonics',
+    type: 'game',
+    gameId: 2,
+    render() {
+      return `
+        <div class="panel game-panel" id="p9">
+          <div class="game-title">★ Mini Game 2 ★</div>
+          <div class="game-name">"Match the Harmonics"</div>
+          <div class="game-instructions">Watch the pattern flash. Then repeat it in order. 3 rounds!</div>
+          <div id="g2-round-display" style="color:var(--dim);font-size:0.8rem;margin-bottom:4px"></div>
+          <div class="harmonics-grid">
+            <button class="harmonic-btn hbtn-blue"  id="hb-blue"  onclick="harmonicPress('blue')"  disabled>🔵</button>
+            <button class="harmonic-btn hbtn-gold"  id="hb-gold"  onclick="harmonicPress('gold')"  disabled>⭐</button>
+            <button class="harmonic-btn hbtn-red"   id="hb-red"   onclick="harmonicPress('red')"   disabled>🔴</button>
+            <button class="harmonic-btn hbtn-green" id="hb-green" onclick="harmonicPress('green')" disabled>💚</button>
+          </div>
+          <div class="game-status" id="g2-status">Get ready…</div>
+          <div class="game-win-msg" id="g2-winmsg" style="display:none">"The Glimmerfins understood. A bridge was built."</div>
+          <button class="game-btn" id="g2-restart" onclick="initGame2()" style="display:none">Try Again</button>
+        </div>`;
+    }
+  },
+
+  // 10 — VOID HUNTERS ARRIVE
+  {
+    chapter: 'Chapter 3 — The Void Hunters',
+    type: 'text',
+    render() {
+      return `
+        <div class="panel panel-text-only" id="p10">
+          <div class="chapter-tag">Chapter 3 — The Void Hunters</div>
+          <div class="panel-prose">They came without warning.<br><br>The lights went out<br>one by one.</div>
+        </div>`;
+    }
+  },
+
+  // 11 — CODY BED
+  {
+    chapter: 'Chapter 3 — The Void Hunters',
+    type: 'photo',
+    render() {
+      return `
+        <div class="panel" id="p11">
+          <img class="comic-photo" src="cody-bed.jpg" alt="Captain lounging">
+          <div class="caption">"The Captain did not panic. He had survived worse. He had survived <strong>baths</strong>."</div>
+        </div>`;
+    }
+  },
+
+  // 12 — VANCE ASLEEP
+  {
+    chapter: 'Chapter 3 — The Void Hunters',
+    type: 'text',
+    render() {
+      return `
+        <div class="panel panel-text-only" id="p12">
+          <div class="chapter-tag">Chapter 3 — The Void Hunters</div>
+          <div class="panel-prose"><strong style="color:var(--blue)">Vance</strong> was already asleep at his engineering station.<br><br>Classic Vance.</div>
+        </div>`;
+    }
+  },
+
+  // 13 — SUE OPENS CHANNEL
+  {
+    chapter: 'Chapter 3 — The Void Hunters',
+    type: 'text',
+    render() {
+      return `
+        <div class="panel panel-text-only" id="p13">
+          <div class="chapter-tag">Chapter 3 — The Void Hunters</div>
+          <div class="panel-prose"><strong style="color:var(--gold)">Sue</strong> opened a channel to the darkness.<br><br>"Wait," she said. "I think they're just…<br><strong style="color:var(--blue)">lost</strong>."</div>
+        </div>`;
+    }
+  },
+
+  // 14 — MINI GAME 3
+  {
+    chapter: 'Mission: Restore the Grid',
+    type: 'game',
+    gameId: 3,
+    render() {
+      return `
+        <div class="panel game-panel" id="p14">
+          <div class="game-title">★ Mini Game 3 ★</div>
+          <div class="game-name">"Restore the Grid"</div>
+          <div class="game-instructions">Click a tile to toggle it and its neighbors.<br>Light all 9 tiles to restore power!</div>
+          <div class="lights-grid" id="lights-grid">
+            ${Array.from({length:9},(_,i)=>`<div class="light-tile" id="lt${i}" onclick="lightToggle(${i})"></div>`).join('')}
+          </div>
+          <div class="game-status" id="g3-status">Tiles off: 9</div>
+          <div class="game-win-msg" id="g3-winmsg" style="display:none">"Power restored! The ship hums back to life."</div>
+          <button class="game-btn" id="g3-restart" onclick="initGame3()" style="display:none">Try Again</button>
+        </div>`;
+    }
+  },
+
+  // 15 — SUE THERAPY
+  {
+    chapter: 'Chapter 4 — The Therapy Session',
+    type: 'text',
+    render() {
+      return `
+        <div class="panel panel-text-only" id="p15">
+          <div class="chapter-tag">Chapter 4 — The Therapy Session</div>
+          <div class="panel-prose"><strong style="color:var(--gold)">Sue</strong> to the Void Hunters:<br><br>"Tell me about your home."</div>
+        </div>`;
+    }
+  },
+
+  // 16 — FORGOTTEN
+  {
+    chapter: 'Chapter 4 — The Therapy Session',
+    type: 'text',
+    render() {
+      return `
+        <div class="panel panel-text-only" id="p16">
+          <div class="chapter-tag">Chapter 4 — The Therapy Session</div>
+          <div class="panel-prose">They had been wandering so long<br>they'd <strong style="color:var(--blue)">forgotten</strong><br>what they were looking for.</div>
+        </div>`;
+    }
+  },
+
+  // 17 — CODY STANDING
+  {
+    chapter: 'Chapter 4 — The Therapy Session',
+    type: 'photo',
+    render() {
+      return `
+        <div class="panel" id="p17">
+          <img class="comic-photo" src="cody-standing.jpg" alt="Captain Cody rises">
+          <div class="caption">"Captain Cody rose. This was the moment. He knew what <strong>lost</strong> felt like. Every time Bob left for work."</div>
+        </div>`;
+    }
+  },
+
+  // 18 — BARK
+  {
+    chapter: 'Chapter 4 — The Therapy Session',
+    type: 'text',
+    render() {
+      return `
+        <div class="panel panel-text-only" id="p18">
+          <div class="chapter-tag">Chapter 4 — The Therapy Session</div>
+          <div class="panel-prose">He barked once.<br><br>Soft.<br><br>Like he was saying:<br><strong style="color:var(--gold)">"I see you."</strong></div>
+        </div>`;
+    }
+  },
+
+  // 19 — MINI GAME 4
+  {
+    chapter: 'Mission: Guide Them Home',
+    type: 'game',
+    gameId: 4,
+    render() {
+      return `
+        <div class="panel game-panel" id="p19">
+          <div class="game-title">★ Mini Game 4 ★</div>
+          <div class="game-name">"Guide Them Home"</div>
+          <div class="game-instructions">Click and drag the glowing dot through the maze.<br>Reach the golden star on the right. 15 seconds!</div>
+          <div class="game-canvas-wrapper">
+            <canvas id="maze-canvas" width="480" height="240"></canvas>
+          </div>
+          <div class="game-status" id="g4-status">⏱ 15</div>
+          <div class="game-win-msg" id="g4-winmsg" style="display:none">"The Void Hunters found their heading."</div>
+          <button class="game-btn" id="g4-restart" onclick="initGame4()" style="display:none">Try Again</button>
+        </div>`;
+    }
+  },
+
+  // 20 — GLIMMERFINS BEACON
+  {
+    chapter: 'Chapter 5 — Home',
+    type: 'text',
+    render() {
+      return `
+        <div class="panel panel-text-only" id="p20">
+          <div class="chapter-tag">Chapter 5 — Home</div>
+          <div class="panel-prose">The Glimmerfins offered their harmonic as a beacon.<br><br>So the <strong style="color:var(--blue)">lost</strong> could always find <strong style="color:var(--gold)">home</strong>.</div>
+        </div>`;
+    }
+  },
+
+  // 21 — BOB CUDDLE
+  {
+    chapter: 'Chapter 5 — Home',
+    type: 'photo',
+    render() {
+      return `
+        <div class="panel" id="p21">
+          <img class="comic-photo" src="cody-bob-cuddle.jpg" alt="Mission complete">
+          <div class="caption">"Mission complete. Chief Scientist <strong>Bob</strong> held the Captain close. Some victories are quiet ones."</div>
+        </div>`;
+    }
+  },
+
+  // 22 — CODY ASLEEP
+  {
+    chapter: 'Chapter 5 — Home',
+    type: 'photo',
+    render() {
+      return `
+        <div class="panel" id="p22">
+          <img class="comic-photo" src="cody-asleep.jpg" alt="Final log">
+          <div class="caption">"Captain's Log, Final Entry: The stars are patient. So is a good dog."</div>
+        </div>`;
+    }
+  },
+
+  // 23 — MINI GAME 5
+  {
+    chapter: 'Mission: Catch the Biscuit',
+    type: 'game',
+    gameId: 5,
+    render() {
+      return `
+        <div class="panel game-panel" id="p23">
+          <div class="game-title">★ Mini Game 5 ★</div>
+          <div class="game-name">"Catch the Biscuit"</div>
+          <div class="game-instructions">Click left/right side or press ← → to move Cody.<br>Catch 5 biscuits before time runs out! 20 seconds.</div>
+          <div class="game-canvas-wrapper">
+            <canvas id="g5-canvas" width="480" height="280"></canvas>
+          </div>
+          <div class="game-status" id="g5-status">⏱ 20 | 🦴 0/5</div>
+          <div class="game-win-msg" id="g5-winmsg" style="display:none">"5 biscuits. A hero's reward."</div>
+          <button class="game-btn" id="g5-restart" onclick="initGame5()" style="display:none">Try Again</button>
+        </div>`;
+    }
+  },
+
+  // 24 — ENDING
+  {
+    chapter: 'Fin',
+    type: 'ending',
+    render() {
+      return `
+        <div class="panel ending-panel" id="p24">
+          <img src="cody2.jpg" alt="Captain Cody">
+          <div class="ending-title">CODY: CAPTAIN OF THE DISCOVERY</div>
+          <div class="ending-subtitle">— To be continued… —</div>
+          <div class="credits">
+            Captain: <span>Cody</span> &nbsp;|&nbsp; Chief Scientist: <span>Bob</span><br>
+            Alien Relations: <span>Sue</span> &nbsp;|&nbsp; Linguist: <span>Leora</span><br>
+            Engineering: <span>Vance</span> &nbsp;|&nbsp; Story: <span>Leemur & Vance</span>
+          </div>
+          <button class="restart-btn" onclick="restartStory()">↺ Start Over</button>
+        </div>`;
+    }
   }
+];
 
-  function navigate(dir) {
-    const next = current + dir;
-    if (next >= 0 && next < total) showPanel(next);
+// ============================================================
+//  NAVIGATION STATE
+// ============================================================
+const TOTAL = PANELS.length;
+let current = parseInt(localStorage.getItem('cody-progress') || '0', 10);
+if (current >= TOTAL) current = 0;
+
+// Game "completed" flags — once won, panel auto-unlocks Next
+const gameWon = { 1: false, 2: false, 3: false, 4: false, 5: false };
+
+function saveProgress() {
+  localStorage.setItem('cody-progress', current);
+}
+
+function updateProgress() {
+  const pct = (current / (TOTAL - 1)) * 100;
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('chapter-label').textContent = PANELS[current].chapter;
+  document.getElementById('nav-prev').disabled = (current === 0);
+  // Next always enabled (games can be skipped after attempt)
+  document.getElementById('nav-next').disabled = false;
+}
+
+function renderAll() {
+  const scene = document.getElementById('scene');
+  scene.innerHTML = PANELS.map(p => p.render()).join('');
+}
+
+function showPanel(idx) {
+  document.querySelectorAll('.panel').forEach(el => el.classList.remove('active'));
+  const el = document.getElementById('p' + idx);
+  if (el) el.classList.add('active');
+  updateProgress();
+  // Init games when their panel becomes active
+  const panel = PANELS[idx];
+  if (panel.type === 'game') {
+    const gid = panel.gameId;
+    if (!gameWon[gid]) {
+      if (gid === 1) initGame1();
+      else if (gid === 2) initGame2();
+      else if (gid === 3) initGame3();
+      else if (gid === 4) initGame4();
+      else if (gid === 5) initGame5();
+    }
   }
+}
 
-  // Click anywhere (except buttons) to advance
-  document.getElementById('stage').addEventListener('click', () => navigate(1));
+function navigate(dir) {
+  const next = current + dir;
+  if (next < 0 || next >= TOTAL) return;
+  // Stop any running games
+  stopAllGames();
+  current = next;
+  saveProgress();
+  showPanel(current);
+}
+
+function restartStory() {
+  stopAllGames();
+  current = 0;
+  Object.keys(gameWon).forEach(k => gameWon[k] = false);
+  saveProgress();
+  showPanel(0);
+}
+
+// ============================================================
+//  GAME 1 — Navigate to the Signal
+// ============================================================
+let g1 = { raf: null, timer: null, running: false };
+
+function initGame1() {
+  stopGame(g1);
+  const canvas = document.getElementById('g1-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  const state = {
+    ship: { x: W/2, y: H - 50, w: 24, h: 28, speed: 5 },
+    star: { x: W/2, y: 60, r: 14, pulse: 0 },
+    asteroids: Array.from({length:5}, (_, i) => ({
+      x: 40 + (i * (W-80)/4) + Math.random()*30 - 15,
+      y: -30 - i * 60,
+      r: 16 + Math.random()*10,
+      speed: 1.2 + Math.random()*1.2
+    })),
+    keys: {},
+    time: 15,
+    won: false,
+    lost: false
+  };
+
+  const statusEl = document.getElementById('g1-status');
+  const winEl = document.getElementById('g1-winmsg');
+  const restartEl = document.getElementById('g1-restart');
+  winEl.style.display = 'none';
+  restartEl.style.display = 'none';
+  statusEl.textContent = '⏱ 15';
+  statusEl.style.color = 'var(--gold)';
 
   // Keyboard
-  document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight' || e.key === ' ') navigate(1);
-    if (e.key === 'ArrowLeft') navigate(-1);
-  });
+  const onKey = e => {
+    if (['ArrowLeft','ArrowRight','a','d'].includes(e.key)) {
+      state.keys[e.key] = (e.type === 'keydown');
+      e.preventDefault();
+    }
+  };
+  document.addEventListener('keydown', onKey);
+  document.addEventListener('keyup', onKey);
 
-  // Touch swipe
-  let touchStartX = 0;
-  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
-  document.addEventListener('touchend', e => {
-    const diff = touchStartX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) navigate(diff > 0 ? 1 : -1);
-  });
+  // Touch: tap left/right half
+  const onTouch = e => {
+    const rect = canvas.getBoundingClientRect();
+    const tx = e.touches[0].clientX - rect.left;
+    if (tx < W/2) { state.keys['ArrowLeft'] = true; state.keys['ArrowRight'] = false; }
+    else { state.keys['ArrowRight'] = true; state.keys['ArrowLeft'] = false; }
+  };
+  const onTouchEnd = () => { state.keys['ArrowLeft'] = false; state.keys['ArrowRight'] = false; };
+  canvas.addEventListener('touchstart', onTouch, {passive:true});
+  canvas.addEventListener('touchend', onTouchEnd);
 
-  showPanel(0);
+  // Timer
+  g1.timer = setInterval(() => {
+    if (state.won || state.lost) return;
+    state.time--;
+    statusEl.textContent = '⏱ ' + state.time;
+    if (state.time <= 5) statusEl.style.color = '#ff5555';
+    if (state.time <= 0) {
+      state.lost = true;
+      statusEl.textContent = '💥 Time\'s up! Try again.';
+      restartEl.style.display = '';
+      clearInterval(g1.timer);
+    }
+  }, 1000);
+
+  function loop() {
+    if (state.won || state.lost) return;
+    ctx.clearRect(0, 0, W, H);
+
+    // BG
+    ctx.fillStyle = '#050a1a';
+    ctx.fillRect(0, 0, W, H);
+    // Stars
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    for (let i=0; i<30; i++) {
+      ctx.beginPath();
+      ctx.arc((i*73+11)%W, (i*47+7)%H, 0.8, 0, Math.PI*2);
+      ctx.fill();
+    }
+
+    // Ship
+    const s = state.ship;
+    if (state.keys['ArrowLeft'] || state.keys['a']) s.x = Math.max(s.w, s.x - s.speed);
+    if (state.keys['ArrowRight'] || state.keys['d']) s.x = Math.min(W - s.w, s.x + s.speed);
+
+    ctx.save();
+    ctx.translate(s.x, s.y);
+    ctx.fillStyle = '#00bfff';
+    ctx.beginPath();
+    ctx.moveTo(0, -s.h);
+    ctx.lineTo(-s.w, s.h/2);
+    ctx.lineTo(s.w, s.h/2);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = '#050a1a';
+    ctx.font = '18px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('🐕', 0, 2);
+    ctx.restore();
+
+    // Star
+    state.star.pulse += 0.08;
+    const glow = Math.abs(Math.sin(state.star.pulse)) * 10 + 12;
+    const grad = ctx.createRadialGradient(state.star.x, state.star.y, 2, state.star.x, state.star.y, glow);
+    grad.addColorStop(0, '#ffd700');
+    grad.addColorStop(1, 'transparent');
+    ctx.beginPath();
+    ctx.arc(state.star.x, state.star.y, glow, 0, Math.PI*2);
+    ctx.fillStyle = grad;
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(state.star.x, state.star.y, 6, 0, Math.PI*2);
+    ctx.fill();
+
+    // Asteroids
+    for (const a of state.asteroids) {
+      a.y += a.speed;
+      if (a.y > H + a.r) a.y = -a.r;
+      ctx.beginPath();
+      ctx.arc(a.x, a.y, a.r, 0, Math.PI*2);
+      ctx.fillStyle = '#445566';
+      ctx.fill();
+      ctx.strokeStyle = '#6688aa';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      // Collision with ship
+      const dx = s.x - a.x, dy = s.y - a.y;
+      if (Math.sqrt(dx*dx+dy*dy) < a.r + 14) {
+        state.lost = true;
+        statusEl.textContent = '💥 Hit! Try again.';
+        restartEl.style.display = '';
+        clearInterval(g1.timer);
+        document.removeEventListener('keydown', onKey);
+        document.removeEventListener('keyup', onKey);
+        return;
+      }
+    }
+
+    // Reach star?
+    const dx = s.x - state.star.x, dy = s.y - state.star.y;
+    if (Math.sqrt(dx*dx+dy*dy) < state.star.r + 20) {
+      state.won = true;
+      gameWon[1] = true;
+      statusEl.textContent = '✨ Signal acquired!';
+      statusEl.style.color = '#80ff80';
+      winEl.style.display = '';
+      clearInterval(g1.timer);
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('keyup', onKey);
+      return;
+    }
+
+    g1.raf = requestAnimationFrame(loop);
+  }
+
+  g1.raf = requestAnimationFrame(loop);
+  g1.cleanup = () => {
+    document.removeEventListener('keydown', onKey);
+    document.removeEventListener('keyup', onKey);
+    canvas.removeEventListener('touchstart', onTouch);
+    canvas.removeEventListener('touchend', onTouchEnd);
+  };
+  g1.running = true;
+}
+
+// ============================================================
+//  GAME 2 — Match the Harmonics
+// ============================================================
+let g2 = { timer: null, running: false };
+let g2State = {};
+
+function initGame2() {
+  stopGame(g2);
+  const statusEl = document.getElementById('g2-status');
+  const winEl = document.getElementById('g2-winmsg');
+  const restartEl = document.getElementById('g2-restart');
+  const roundEl = document.getElementById('g2-round-display');
+  if (!statusEl) return;
+  winEl.style.display = 'none';
+  restartEl.style.display = 'none';
+
+  const colors = ['blue','gold','red','green'];
+  g2State = {
+    round: 1,
+    maxRounds: 3,
+    sequence: [],
+    playerSeq: [],
+    showing: false,
+    accepting: false,
+    won: false,
+    lost: false
+  };
+
+  function generateSeq(round) {
+    const len = 2 + round;
+    const seq = [];
+    for (let i=0; i<len; i++) seq.push(colors[Math.floor(Math.random()*4)]);
+    return seq;
+  }
+
+  function setButtons(enabled) {
+    colors.forEach(c => {
+      const btn = document.getElementById('hb-' + c);
+      if (btn) btn.disabled = !enabled;
+    });
+  }
+
+  function flashBtn(color, ms=400) {
+    return new Promise(res => {
+      const btn = document.getElementById('hb-' + color);
+      if (!btn) { res(); return; }
+      btn.classList.add('lit');
+      setTimeout(() => { btn.classList.remove('lit'); res(); }, ms);
+    });
+  }
+
+  async function showSequence(seq) {
+    g2State.showing = true;
+    setButtons(false);
+    statusEl.textContent = 'Watch…';
+    await sleep(600);
+    for (const c of seq) {
+      await flashBtn(c, 450);
+      await sleep(200);
+    }
+    g2State.showing = false;
+    g2State.accepting = true;
+    statusEl.textContent = 'Your turn!';
+    setButtons(true);
+  }
+
+  function startRound(round) {
+    g2State.round = round;
+    g2State.playerSeq = [];
+    g2State.sequence = generateSeq(round);
+    roundEl.textContent = `Round ${round} of ${g2State.maxRounds}`;
+    showSequence(g2State.sequence);
+  }
+
+  window.harmonicPress = function(color) {
+    if (!g2State.accepting || g2State.won || g2State.lost) return;
+    g2State.playerSeq.push(color);
+    flashBtn(color, 200);
+    const idx = g2State.playerSeq.length - 1;
+    if (g2State.playerSeq[idx] !== g2State.sequence[idx]) {
+      // Wrong
+      g2State.accepting = false;
+      g2State.lost = true;
+      setButtons(false);
+      statusEl.textContent = '❌ Wrong! Try again.';
+      restartEl.style.display = '';
+      return;
+    }
+    if (g2State.playerSeq.length === g2State.sequence.length) {
+      // Round complete
+      g2State.accepting = false;
+      setButtons(false);
+      if (g2State.round >= g2State.maxRounds) {
+        // WIN
+        g2State.won = true;
+        gameWon[2] = true;
+        statusEl.textContent = '✨ Perfect harmony!';
+        statusEl.style.color = '#80ff80';
+        winEl.style.display = '';
+      } else {
+        statusEl.textContent = '✅ Round complete!';
+        g2.timer = setTimeout(() => startRound(g2State.round + 1), 800);
+      }
+    }
+  };
+
+  startRound(1);
+  g2.running = true;
+}
+
+// ============================================================
+//  GAME 3 — Lights Out
+// ============================================================
+let g3State = [];
+
+function initGame3() {
+  const statusEl = document.getElementById('g3-status');
+  const winEl = document.getElementById('g3-winmsg');
+  const restartEl = document.getElementById('g3-restart');
+  if (!statusEl) return;
+  winEl.style.display = 'none';
+  restartEl.style.display = 'none';
+
+  // Guaranteed solvable: start all on, apply random moves
+  g3State = Array(9).fill(true);
+  const applyToggle = i => {
+    const neighbors = [0,-1,1,-3,3,-4,4,-2,2].filter(d => {
+      const ni = i+d;
+      if (ni<0||ni>8) return false;
+      if (i%3===0 && (d===-1||d===-4||d===2)) return false;
+      if (i%3===2 && (d===1||d===4||d===-2)) return false;
+      return true;
+    });
+    [i, ...neighbors].forEach(ni => {
+      if (ni>=0&&ni<9) g3State[ni] = !g3State[ni];
+    });
+  };
+  // 6–10 random valid moves to scramble
+  for (let k=0; k<7+Math.floor(Math.random()*4); k++) applyToggle(Math.floor(Math.random()*9));
+
+  renderLights();
+  updateG3Status();
+}
+
+function neighbors3(i) {
+  const row = Math.floor(i/3), col = i%3;
+  const result = [i];
+  if (row > 0) result.push(i-3);
+  if (row < 2) result.push(i+3);
+  if (col > 0) result.push(i-1);
+  if (col < 2) result.push(i+1);
+  return result;
+}
+
+window.lightToggle = function(i) {
+  const winEl = document.getElementById('g3-winmsg');
+  if (!winEl || gameWon[3]) return;
+  neighbors3(i).forEach(n => { g3State[n] = !g3State[n]; });
+  renderLights();
+  updateG3Status();
+};
+
+function renderLights() {
+  for (let i=0; i<9; i++) {
+    const el = document.getElementById('lt' + i);
+    if (el) el.classList.toggle('on', g3State[i]);
+  }
+}
+
+function updateG3Status() {
+  const statusEl = document.getElementById('g3-status');
+  const winEl = document.getElementById('g3-winmsg');
+  if (!statusEl) return;
+  const offCount = g3State.filter(v => !v).length;
+  if (offCount === 0) {
+    statusEl.textContent = '✨ All lit!';
+    statusEl.style.color = '#80ff80';
+    gameWon[3] = true;
+    if (winEl) winEl.style.display = '';
+  } else {
+    statusEl.textContent = `Tiles off: ${offCount}`;
+  }
+}
+
+// ============================================================
+//  GAME 4 — Maze
+// ============================================================
+let g4 = { raf: null, timer: null, running: false };
+
+function initGame4() {
+  stopGame(g4);
+  const canvas = document.getElementById('maze-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  const statusEl = document.getElementById('g4-status');
+  const winEl = document.getElementById('g4-winmsg');
+  const restartEl = document.getElementById('g4-restart');
+  if (!statusEl) return;
+  winEl.style.display = 'none';
+  restartEl.style.display = 'none';
+  statusEl.textContent = '⏱ 15';
+  statusEl.style.color = 'var(--gold)';
+
+  // Simple predefined maze walls (horizontal segments)
+  // Cell size
+  const CS = 48;
+  const COLS = Math.floor(W/CS);
+  const ROWS = Math.floor(H/CS);
+
+  // Walls defined as {x1,y1,x2,y2} in pixel coords
+  const walls = [
+    // Outer border
+    {x1:0,y1:0,x2:W,y2:0},
+    {x1:0,y1:H,x2:W,y2:H},
+    {x1:0,y1:0,x2:0,y2:H},
+    {x1:W,y1:0,x2:W,y2:H},
+    // Internal walls — create a winding path
+    {x1:CS,y1:0,x2:CS,y2:CS*3},
+    {x1:CS*2,y1:CS,x2:CS*2,y2:CS*4},
+    {x1:CS*3,y1:0,x2:CS*3,y2:CS*2},
+    {x1:CS*3,y1:CS*3,x2:CS*3,y2:CS*5},
+    {x1:CS*4,y1:CS,x2:CS*4,y2:CS*3},
+    {x1:CS*5,y1:0,x2:CS*5,y2:CS*2},
+    {x1:CS*5,y1:CS*3,x2:CS*5,y2:H},
+    {x1:CS*6,y1:CS,x2:CS*6,y2:CS*4},
+    {x1:CS*7,y1:0,x2:CS*7,y2:CS*3},
+    {x1:CS*7,y1:CS*4,x2:CS*7,y2:H},
+    {x1:CS*8,y1:CS,x2:CS*8,y2:CS*4},
+    // Horizontal walls
+    {x1:CS,y1:CS*2,x2:CS*3,y2:CS*2},
+    {x1:CS*4,y1:CS*3,x2:CS*6,y2:CS*3},
+    {x1:CS*2,y1:CS*4,x2:CS*4,y2:CS*4},
+    {x1:CS*6,y1:CS*4,x2:CS*8,y2:CS*4},
+  ];
+
+  const dotR = 10;
+  const dot = { x: 24, y: H/2, dragging: false };
+  const goal = { x: W - 24, y: H/2 };
+  let time = 15, won = false, lost = false;
+
+  function segmentsIntersect(ax1,ay1,ax2,ay2, bx1,by1,bx2,by2) {
+    const dax=ax2-ax1, day=ay2-ay1, dbx=bx2-bx1, dby=by2-by1;
+    const denom = dax*dby - day*dbx;
+    if (denom===0) return false;
+    const t = ((bx1-ax1)*dby - (by1-ay1)*dbx)/denom;
+    const u = ((bx1-ax1)*day - (by1-ay1)*dax)/denom;
+    return t>=0&&t<=1&&u>=0&&u<=1;
+  }
+
+  function collidesWall(nx, ny) {
+    // Check if circle at nx,ny overlaps any wall
+    for (const w of walls) {
+      // Distance from center to line segment
+      const dx = w.x2-w.x1, dy = w.y2-w.y1;
+      const len2 = dx*dx+dy*dy;
+      if (len2===0) continue;
+      let t = ((nx-w.x1)*dx+(ny-w.y1)*dy)/len2;
+      t = Math.max(0, Math.min(1, t));
+      const cx = w.x1+t*dx, cy = w.y1+t*dy;
+      const dist2 = (nx-cx)**2+(ny-cy)**2;
+      if (dist2 < (dotR+2)**2) return true;
+    }
+    return false;
+  }
+
+  const getPos = (e, canvas) => {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    if (e.touches) {
+      return {
+        x: (e.touches[0].clientX - rect.left) * scaleX,
+        y: (e.touches[0].clientY - rect.top) * scaleY
+      };
+    }
+    return {
+      x: (e.clientX - rect.left) * scaleX,
+      y: (e.clientY - rect.top) * scaleY
+    };
+  };
+
+  const onDown = e => {
+    const pos = getPos(e, canvas);
+    if (Math.hypot(pos.x - dot.x, pos.y - dot.y) < dotR * 2) dot.dragging = true;
+    e.preventDefault();
+  };
+  const onMove = e => {
+    if (!dot.dragging || won || lost) return;
+    const pos = getPos(e, canvas);
+    if (!collidesWall(pos.x, pos.y)) {
+      dot.x = pos.x;
+      dot.y = pos.y;
+    }
+    e.preventDefault();
+  };
+  const onUp = () => { dot.dragging = false; };
+
+  canvas.addEventListener('mousedown', onDown);
+  canvas.addEventListener('mousemove', onMove);
+  canvas.addEventListener('mouseup', onUp);
+  canvas.addEventListener('touchstart', onDown, {passive:false});
+  canvas.addEventListener('touchmove', onMove, {passive:false});
+  canvas.addEventListener('touchend', onUp);
+
+  g4.timer = setInterval(() => {
+    if (won || lost) return;
+    time--;
+    statusEl.textContent = '⏱ ' + time;
+    if (time <= 5) statusEl.style.color = '#ff5555';
+    if (time <= 0) {
+      lost = true;
+      statusEl.textContent = '⏱ Time\'s up! Try again.';
+      restartEl.style.display = '';
+      clearInterval(g4.timer);
+    }
+  }, 1000);
+
+  function draw() {
+    if (won || lost) return;
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#050a1a';
+    ctx.fillRect(0, 0, W, H);
+
+    // Goal star
+    ctx.save();
+    ctx.shadowBlur = 16;
+    ctx.shadowColor = '#ffd700';
+    ctx.fillStyle = '#ffd700';
+    ctx.font = '24px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('⭐', goal.x, goal.y);
+    ctx.restore();
+
+    // Walls
+    ctx.strokeStyle = '#1a4a7a';
+    ctx.lineWidth = 4;
+    ctx.lineCap = 'round';
+    for (const w of walls) {
+      ctx.beginPath();
+      ctx.moveTo(w.x1, w.y1);
+      ctx.lineTo(w.x2, w.y2);
+      ctx.stroke();
+    }
+
+    // Dot
+    const grad = ctx.createRadialGradient(dot.x, dot.y, 2, dot.x, dot.y, dotR);
+    grad.addColorStop(0, '#ffffff');
+    grad.addColorStop(1, '#00bfff');
+    ctx.beginPath();
+    ctx.arc(dot.x, dot.y, dotR, 0, Math.PI*2);
+    ctx.fillStyle = grad;
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = '#00bfff';
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Check goal
+    if (Math.hypot(dot.x - goal.x, dot.y - goal.y) < 28) {
+      won = true;
+      gameWon[4] = true;
+      statusEl.textContent = '✨ They\'re home!';
+      statusEl.style.color = '#80ff80';
+      winEl.style.display = '';
+      clearInterval(g4.timer);
+      return;
+    }
+
+    g4.raf = requestAnimationFrame(draw);
+  }
+
+  g4.raf = requestAnimationFrame(draw);
+  g4.cleanup = () => {
+    canvas.removeEventListener('mousedown', onDown);
+    canvas.removeEventListener('mousemove', onMove);
+    canvas.removeEventListener('mouseup', onUp);
+    canvas.removeEventListener('touchstart', onDown);
+    canvas.removeEventListener('touchmove', onMove);
+    canvas.removeEventListener('touchend', onUp);
+  };
+  g4.running = true;
+}
+
+// ============================================================
+//  GAME 5 — Catch the Biscuit
+// ============================================================
+let g5 = { raf: null, timer: null, running: false };
+
+function initGame5() {
+  stopGame(g5);
+  const canvas = document.getElementById('g5-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  const statusEl = document.getElementById('g5-status');
+  const winEl = document.getElementById('g5-winmsg');
+  const restartEl = document.getElementById('g5-restart');
+  if (!statusEl) return;
+  winEl.style.display = 'none';
+  restartEl.style.display = 'none';
+  statusEl.textContent = '⏱ 20 | 🦴 0/5';
+  statusEl.style.color = 'var(--gold)';
+
+  const cody = { x: W/2, w: 50, h: 50, speed: 7 };
+  const biscuits = [];
+  const keys = {};
+  let caught = 0, time = 20, won = false, lost = false;
+  const TARGET = 5;
+
+  function spawnBiscuit() {
+    biscuits.push({
+      x: 20 + Math.random() * (W - 40),
+      y: -20,
+      r: 12,
+      speed: 2 + Math.random() * 2
+    });
+  }
+  for (let i=0; i<3; i++) spawnBiscuit();
+
+  const onKey = e => {
+    if (['ArrowLeft','ArrowRight','a','d'].includes(e.key)) {
+      keys[e.key] = (e.type === 'keydown');
+      e.preventDefault();
+    }
+  };
+  document.addEventListener('keydown', onKey);
+  document.addEventListener('keyup', onKey);
+
+  // Tap to move
+  const onTap = e => {
+    const rect = canvas.getBoundingClientRect();
+    const tx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    const scaleX = W / rect.width;
+    const tapX = tx * scaleX;
+    cody.x += tapX < W/2 ? -40 : 40;
+    cody.x = Math.max(cody.w/2, Math.min(W - cody.w/2, cody.x));
+  };
+  canvas.addEventListener('click', onTap);
+  canvas.addEventListener('touchstart', onTap, {passive:true});
+
+  g5.timer = setInterval(() => {
+    if (won || lost) return;
+    time--;
+    statusEl.textContent = `⏱ ${time} | 🦴 ${caught}/${TARGET}`;
+    if (time <= 5) statusEl.style.color = '#ff5555';
+    if (time <= 0 && !won) {
+      lost = true;
+      statusEl.textContent = caught >= TARGET ? '✨ Done!' : `⏱ Time! Caught ${caught}/${TARGET}. Try again.`;
+      restartEl.style.display = '';
+      clearInterval(g5.timer);
+    }
+    if (Math.random() < 0.5) spawnBiscuit();
+  }, 1000);
+
+  function loop() {
+    if (won || lost) return;
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#050a1a';
+    ctx.fillRect(0, 0, W, H);
+
+    // Stars
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    for (let i=0; i<20; i++) {
+      ctx.beginPath();
+      ctx.arc((i*97+13)%W, (i*53+9)%H, 0.7, 0, Math.PI*2);
+      ctx.fill();
+    }
+
+    // Move Cody
+    if (keys['ArrowLeft'] || keys['a']) cody.x -= cody.speed;
+    if (keys['ArrowRight'] || keys['d']) cody.x += cody.speed;
+    cody.x = Math.max(cody.w/2, Math.min(W - cody.w/2, cody.x));
+
+    // Draw Cody
+    ctx.font = '36px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('🐕', cody.x, H - 30);
+
+    // Catch zone
+    ctx.strokeStyle = 'rgba(0,191,255,0.2)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(cody.x - cody.w, H - 55, cody.w*2, 50);
+
+    // Biscuits
+    for (let i = biscuits.length-1; i>=0; i--) {
+      const b = biscuits[i];
+      b.y += b.speed;
+
+      // Draw biscuit
+      ctx.font = '20px sans-serif';
+      ctx.fillText('🦴', b.x, b.y);
+
+      // Catch?
+      if (b.y > H - 55 && b.y < H - 5 && Math.abs(b.x - cody.x) < cody.w + b.r) {
+        biscuits.splice(i, 1);
+        caught++;
+        statusEl.textContent = `⏱ ${time} | 🦴 ${caught}/${TARGET}`;
+        // Flash gold
+        statusEl.style.color = '#ffd700';
+        setTimeout(() => { statusEl.style.color = time<=5?'#ff5555':'var(--gold)'; }, 200);
+        if (caught >= TARGET) {
+          won = true;
+          gameWon[5] = true;
+          statusEl.textContent = '✨ 5 biscuits!';
+          statusEl.style.color = '#80ff80';
+          winEl.style.display = '';
+          clearInterval(g5.timer);
+          document.removeEventListener('keydown', onKey);
+          document.removeEventListener('keyup', onKey);
+          return;
+        }
+        continue;
+      }
+
+      // Missed (off bottom)
+      if (b.y > H + 20) biscuits.splice(i, 1);
+    }
+
+    g5.raf = requestAnimationFrame(loop);
+  }
+
+  g5.raf = requestAnimationFrame(loop);
+  g5.cleanup = () => {
+    document.removeEventListener('keydown', onKey);
+    document.removeEventListener('keyup', onKey);
+    canvas.removeEventListener('click', onTap);
+    canvas.removeEventListener('touchstart', onTap);
+  };
+  g5.running = true;
+}
+
+// ============================================================
+//  UTILITIES
+// ============================================================
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function stopGame(g) {
+  if (g.raf) { cancelAnimationFrame(g.raf); g.raf = null; }
+  if (g.timer) { clearInterval(g.timer); clearTimeout(g.timer); g.timer = null; }
+  if (g.cleanup) { g.cleanup(); g.cleanup = null; }
+  g.running = false;
+}
+
+function stopAllGames() {
+  stopGame(g1);
+  stopGame(g2);
+  stopGame(g4);
+  stopGame(g5);
+}
+
+// ============================================================
+//  BOOT
+// ============================================================
+renderAll();
+showPanel(current);
+
+// Global keyboard: arrow keys for navigation when not in game
+document.addEventListener('keydown', e => {
+  const curPanel = PANELS[current];
+  if (curPanel && curPanel.type === 'game') return; // let game handle it
+  if (e.key === 'ArrowRight') navigate(1);
+  if (e.key === 'ArrowLeft') navigate(-1);
+});
 </script>
 </body>
 </html>
